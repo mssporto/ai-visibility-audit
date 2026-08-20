@@ -1,0 +1,115 @@
+---
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>AI Visibility Audit (prototype)</title>
+	</head>
+	<body>
+		<h1>AI Visibility Audit — ugly prototype</h1>
+		<p>Paste a URL. Get an AEO score and a GEO score. No styling yet, on purpose.</p>
+
+		<form id="audit-form">
+			<input
+				type="url"
+				name="url"
+				id="url-input"
+				placeholder="https://example.com"
+				required
+			/>
+			<button type="submit">Run audit</button>
+		</form>
+
+		<p id="status"></p>
+
+		<div id="results" hidden>
+			<p id="blocked-warning" hidden style="color: red; font-weight: bold;"></p>
+
+			<h2>Scores</h2>
+			<ul>
+				<li>AEO score: <strong id="aeo-score"></strong> / 100</li>
+				<li>GEO score: <strong id="geo-score"></strong> / 100</li>
+			</ul>
+
+			<p id="sitemap-note"></p>
+			<p id="llms-note"></p>
+
+			<h2>Recommendations</h2>
+			<ul id="recommendations"></ul>
+
+			<h2>Category breakdown</h2>
+			<pre id="raw-categories"></pre>
+		</div>
+
+		<script>
+			const form = document.getElementById("audit-form") as HTMLFormElement;
+			const status = document.getElementById("status")!;
+			const results = document.getElementById("results")!;
+			const aeoScoreEl = document.getElementById("aeo-score")!;
+			const geoScoreEl = document.getElementById("geo-score")!;
+			const recommendationsEl = document.getElementById("recommendations")!;
+			const rawCategoriesEl = document.getElementById("raw-categories")!;
+			const sitemapNoteEl = document.getElementById("sitemap-note")!;
+			const llmsNoteEl = document.getElementById("llms-note")!;
+			const blockedWarningEl = document.getElementById("blocked-warning")!;
+
+			form.addEventListener("submit", async (event) => {
+				event.preventDefault();
+				const input = document.getElementById("url-input") as HTMLInputElement;
+				const url = input.value.trim();
+				if (!url) return;
+
+				results.hidden = true;
+				status.textContent = "Running audit…";
+
+				try {
+					const response = await fetch(`/api/audit?url=${encodeURIComponent(url)}`);
+					const data = await response.json();
+
+					if (!response.ok) {
+						status.textContent = `Error: ${data.error ?? "unknown error"}`;
+						return;
+					}
+
+					status.textContent = "";
+					aeoScoreEl.textContent = String(data.aeoScore);
+					geoScoreEl.textContent = String(data.geoScore);
+
+					if (data.blockedFromIndexing) {
+						blockedWarningEl.hidden = false;
+						blockedWarningEl.textContent =
+							"⚠ noindex detected — this page is excluded from Google Search and AI features entirely. Both scores are forced to 0 regardless of other signals.";
+					} else if (data.blockedFromSnippets) {
+						blockedWarningEl.hidden = false;
+						blockedWarningEl.textContent =
+							"⚠ nosnippet detected — this page can't appear in any snippet, including AI Overviews/AI Mode.";
+					} else {
+						blockedWarningEl.hidden = true;
+					}
+
+					recommendationsEl.innerHTML = "";
+					for (const rec of data.recommendations) {
+						const li = document.createElement("li");
+						li.textContent = `[${rec.priority}] ${rec.title} — ${rec.detail}`;
+						recommendationsEl.appendChild(li);
+					}
+
+					rawCategoriesEl.textContent = JSON.stringify(data.categories, null, 2);
+					sitemapNoteEl.textContent = data.hasSitemap
+						? "sitemap.xml: found (informational only, not scored)"
+						: "sitemap.xml: not found (informational only, not scored)";
+					llmsNoteEl.textContent = data.hasLlmsTxt
+						? "llms.txt: found (informational only — Google ignores it, not scored)"
+						: "llms.txt: not found (informational only — Google ignores it, not scored)";
+					results.hidden = false;
+				} catch (err) {
+					status.textContent = "Network error running the audit.";
+				}
+			});
+		</script>
+	</body>
+</html>
