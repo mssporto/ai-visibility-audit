@@ -1,65 +1,131 @@
-<footer class="footer">
-	<div class="footer__row">
-		<div class="footer__brand">
-			<p class="footer__title">AI Visibility Audit</p>
-			<p class="footer__tagline">A free, instant AEO + GEO readiness check.</p>
+---
+import { SITE_NAME, SITE_DESCRIPTION } from "@/consts.ts";
+---
+
+<footer class="footer_wrap">
+	<div class="footer_inner">
+		<div class="footer_top">
+			<div>
+				<a class="footer_logo" href="/" aria-label={SITE_NAME}>{SITE_NAME}</a>
+				<p class="footer_tagline text-style-small">{SITE_DESCRIPTION}</p>
+			</div>
+			<nav aria-label="Footer">
+				<ul class="footer_links">
+					<li><a class="footer_link" href="/">Run an audit</a></li>
+					<li>
+						<a
+							class="footer_link"
+							href="https://dahiana.work"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Portfolio
+						</a>
+					</li>
+				</ul>
+			</nav>
 		</div>
-		<nav class="footer__links" aria-label="Footer">
-			<a href="/">Run an audit</a>
-			<a href="https://dahiana.work" target="_blank" rel="noopener noreferrer">Portfolio</a>
-		</nav>
+		<div class="footer_bottom">
+			<p class="footer_copyright text-style-small">
+				&copy; <span id="year">{new Date().getFullYear()}</span>&#160;{
+					SITE_NAME
+				}
+			</p>
+		</div>
 	</div>
-	<p class="footer__copyright">© {new Date().getFullYear()} Dahiana Porto</p>
 </footer>
 
-<style>
-	.footer {
-		border-top: 1px solid var(--border);
-		padding: var(--space-4) var(--space-3);
-		background: var(--surface);
-	}
+<script>
+	const year = document.querySelector<HTMLSpanElement>("#year");
 
-	.footer__row {
-		max-width: var(--dashboard-max-width);
-		margin: 0 auto;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		gap: var(--space-3);
+	if (year) {
+		year.textContent = new Date().getFullYear().toString();
 	}
+</script>
 
-	.footer__title {
-		font-weight: 700;
-		font-size: var(--text-small);
-		color: var(--ink);
-		margin: 0;
-	}
+<style is:global>
+	@layer components {
+		.footer_wrap {
+			display: flex;
+			justify-content: center;
+			padding-block: var(--section-space-small);
+			padding-inline: var(--site-margin);
+			background-color: var(--background-2);
+			color: var(--text);
+			border-top: var(--border-width) solid var(--border);
+		}
 
-	.footer__tagline {
-		font-size: var(--text-small);
-		color: var(--ink-secondary);
-		margin: var(--space-1) 0 0;
-	}
+		.footer_inner {
+			width: 100%;
+			max-width: var(--dashboard-max-width);
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-6);
+		}
 
-	.footer__links {
-		display: flex;
-		gap: var(--space-3);
-	}
-	.footer__links a {
-		font-size: var(--text-small);
-		color: var(--ink-secondary);
-		text-decoration: none;
-		font-weight: 500;
-	}
-	.footer__links a:hover {
-		color: var(--ink);
-		text-decoration: underline;
-	}
+		.footer_top {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: var(--space-4) var(--space-6);
+		}
 
-	.footer__copyright {
-		max-width: var(--dashboard-max-width);
-		margin: var(--space-3) auto 0;
-		font-size: var(--text-micro);
-		color: var(--ink-secondary);
+		/* Text wordmark here (no logo asset in this project), unlike Lumos's own
+		   width-sized SVG logo. */
+		.footer_logo {
+			display: inline-flex;
+			align-items: center;
+			color: var(--text);
+			font-weight: var(--primary-bold);
+			font-size: var(--text-small);
+			text-decoration: none;
+			transition: opacity 200ms;
+			@media (hover: hover) {
+				&:hover {
+					opacity: 0.6;
+				}
+			}
+		}
+
+		.footer_tagline {
+			color: var(--text-faded);
+			margin-top: var(--space-1);
+		}
+
+		.footer_links {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: var(--space-4);
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			font-size: var(--text-small);
+			font-weight: var(--primary-medium);
+		}
+
+		.footer_link {
+			display: inline-flex;
+			align-items: center;
+			min-height: 2.75rem;
+			color: var(--text-faded);
+			text-decoration: none;
+			transition: color 200ms;
+			@media (hover: hover) {
+				&:hover {
+					color: var(--text);
+				}
+			}
+		}
+
+		.footer_bottom {
+			padding-top: var(--space-4);
+			border-top: var(--border-width) solid var(--border);
+		}
+
+		.footer_copyright {
+			color: var(--text-faded);
+		}
 	}
 </style>

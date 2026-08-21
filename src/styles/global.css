@@ -1,65 +1,91 @@
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
-@import "@fontsource/inter/800.css";
-@import "./tokens.css";
+/* Cascade order, lowest priority first — matches Lumos's own global.css. A
+   later layer beats an earlier one whatever the selectors say, so a real
+   component (e.g. Button's `.button_wrap`, layer `components`) always wins
+   over this file's base reset regardless of source order or specificity. */
+@layer base, patterns, components, utilities;
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* Only the weights actually referenced (--primary-regular/-medium/-bold =
+   400/500/700) — 600 and 800 were imported but never used, adding dead
+   @font-face rules to this render-blocking stylesheet. */
+@import "@fontsource/inter/400.css" layer(base);
+@import "@fontsource/inter/500.css" layer(base);
+@import "@fontsource/inter/700.css" layer(base);
+@import "./tokens.css" layer(base);
+@import "./patterns.css" layer(patterns);
 
-html {
-  scroll-behavior: smooth;
-}
+@layer base {
+	/* Lumos's reset (base.css), ported without the parts this app doesn't use
+	   (the six-level heading clamp scale, theme-dark/theme-brand classes). */
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-}
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-body);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
+	* {
+		margin: 0;
+	}
 
-.skip-link {
-  position: absolute;
-  left: -999px;
-  top: 0;
-  background: var(--ink);
-  color: var(--surface);
-  padding: var(--space-1) var(--space-2);
-  z-index: 100;
-}
+	html {
+		scroll-behavior: smooth;
+	}
 
-.skip-link:focus {
-  left: var(--space-1);
-  top: var(--space-1);
-}
+	body {
+		display: flex;
+		flex-direction: column;
+		min-height: 100svh;
+		background: var(--background);
+		color: var(--text);
+		font-family: var(--primary-family);
+		font-weight: var(--primary-regular);
+		line-height: var(--line-height-large);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
 
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
+	a:not([class]) {
+		text-decoration: underline;
+	}
 
-button:focus-visible,
-input:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
+	button {
+		font: inherit;
+		background: none;
+		text-align: inherit;
+		padding: 0;
+	}
+	button:not(:disabled) {
+		cursor: pointer;
+	}
+
+	input,
+	textarea,
+	select {
+		font: inherit;
+	}
+
+	::selection {
+		background-color: var(--text);
+		color: var(--background);
+	}
+
+	:focus-visible {
+		outline-color: var(--text);
+		outline-offset: var(--focus-offset);
+		outline-width: var(--focus-width);
+		outline-style: solid;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
 }
