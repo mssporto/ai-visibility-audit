@@ -25,31 +25,34 @@ narrative) was fully designed, built, and tested — then explicitly rejected by
 what they wanted, twice over two different attempts. See git history on this branch for that
 work. Do not resurrect it without a fresh, explicit decision to do so.
 
-**Current direction:** "Modern Utility" — clarity over decoration, extreme readability,
-functional confidence. High contrast, minimal ornament, generous whitespace, structured data
-rows. The interface should feel like a precise diagnostic instrument, not an atmospheric scene.
-This came from the user directly (a design system they generated and approved elsewhere), not
-from an internal design process — treat `design.md`'s "Modern Utility Design System" as the
-settled spec, not a starting point to iterate away from without being asked.
+**Current direction:** clarity over decoration, extreme readability, functional confidence. High
+contrast, minimal ornament, generous whitespace, structured data rows. The interface should feel
+like a precise diagnostic instrument, not an atmospheric scene. As of 2026-08-21 this is
+implemented on a Lumos-based design system (`npm create lumos@latest`'s token/reset system,
+restyled) rather than the earlier hand-authored "Modern Utility Design System" — same principles,
+different foundation; see `design.md` for the full rationale and what was/wasn't ported from
+Lumos. Treat `design.md` as the settled spec, not a starting point to iterate away from without
+being asked.
 
 ## Anti-references
 
 - The clinic-visit concept (see above) — flat vs. textured was never the actual problem; the
   *whole metaphor* was rejected, not just its execution. Don't reintroduce skeuomorphism, warm
   kraft/paper tones, or physical-object staging.
-- Any unnecessary texture, shadow, gradient, or decorative motion on top of the current Modern
-  Utility system — "clarity over decoration" is the explicit standing instruction now, not a
-  suggestion to push against.
+- Any unnecessary texture, shadow, gradient, or decorative motion on top of the current design
+  system — "clarity over decoration" is the explicit standing instruction now, not a suggestion
+  to push against.
 - Glassmorphism, gradient text, side-stripe card borders, identical repeated card grids, tiny
   uppercase tracked eyebrows above every section, numbered 01/02/03 section markers where the
   content isn't actually a sequence.
 
 ## Design Principles
 
-1. **Follow the approved spec exactly.** `design.md`'s Modern Utility system is a settled
-   decision, not raw material for further creative reinterpretation — implement it faithfully,
-   including its literal pure-black/white choices (an explicit, deliberate override of this
-   project's general house rule against pure black/white fills).
+1. **Follow the approved spec exactly.** `design.md`'s design system is a settled decision, not
+   raw material for further creative reinterpretation — implement it faithfully. Unlike the
+   earlier Modern Utility system (which deliberately used literal pure black/white), the current
+   Lumos-based palette nudges off pure `#FFFFFF`/`#1F1D1E` specifically to stay inside this
+   project's general house rule against pure black/white fills — no override in effect here.
 2. **Function and legibility come first.** Every element earns its place by being useful; strip
    anything that doesn't directly help someone read their audit result quickly.
 3. **High contrast, real status signaling.** Pass/fail states use color *and* an icon/label,
