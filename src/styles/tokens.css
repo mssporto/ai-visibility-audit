@@ -1,0 +1,39 @@
+/* Mirrors design.md exactly. Update both in the same change.
+   Modern Utility Design System — clarity over decoration. */
+
+:root {
+  /* ===== Color ===== */
+  --bg: #f4f4f4;
+  --surface: #ffffff;
+  --ink: #000000;
+  --ink-secondary: #666666;
+  --success: #10b981;
+  --error: #ef4444;
+  --border: #d1d5db;
+
+  /* ===== Typography ===== */
+  --font-body: "Inter", -apple-system, "SF Pro Text", Roboto, system-ui, sans-serif;
+
+  --text-display: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  --text-title: clamp(1.25rem, 1.1rem + 0.8vw, 1.75rem);
+  --text-score: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-micro: 0.75rem;
+
+  /* ===== Spacing (8px grid) ===== */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-6: 3rem;
+  --space-8: 4rem;
+  --space-12: 6rem;
+
+  /* ===== Roundness — minimal to zero, per the utility system ===== */
+  --radius: 2px;
+  --radius-pill: 999px;
+
+  --content-max-width: 40rem;
+  --dashboard-max-width: 48rem;
+}

@@ -1,0 +1,65 @@
+<footer class="footer">
+	<div class="footer__row">
+		<div class="footer__brand">
+			<p class="footer__title">AI Visibility Audit</p>
+			<p class="footer__tagline">A free, instant AEO + GEO readiness check.</p>
+		</div>
+		<nav class="footer__links" aria-label="Footer">
+			<a href="/">Run an audit</a>
+			<a href="https://dahiana.work" target="_blank" rel="noopener noreferrer">Portfolio</a>
+		</nav>
+	</div>
+	<p class="footer__copyright">© {new Date().getFullYear()} Dahiana Porto</p>
+</footer>
+
+<style>
+	.footer {
+		border-top: 1px solid var(--border);
+		padding: var(--space-4) var(--space-3);
+		background: var(--surface);
+	}
+
+	.footer__row {
+		max-width: var(--dashboard-max-width);
+		margin: 0 auto;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: var(--space-3);
+	}
+
+	.footer__title {
+		font-weight: 700;
+		font-size: var(--text-small);
+		color: var(--ink);
+		margin: 0;
+	}
+
+	.footer__tagline {
+		font-size: var(--text-small);
+		color: var(--ink-secondary);
+		margin: var(--space-1) 0 0;
+	}
+
+	.footer__links {
+		display: flex;
+		gap: var(--space-3);
+	}
+	.footer__links a {
+		font-size: var(--text-small);
+		color: var(--ink-secondary);
+		text-decoration: none;
+		font-weight: 500;
+	}
+	.footer__links a:hover {
+		color: var(--ink);
+		text-decoration: underline;
+	}
+
+	.footer__copyright {
+		max-width: var(--dashboard-max-width);
+		margin: var(--space-3) auto 0;
+		font-size: var(--text-micro);
+		color: var(--ink-secondary);
+	}
+</style>
