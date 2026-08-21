@@ -157,12 +157,20 @@ place in this project where "ugly prototype first" does not mean "skip the guard
   `design.md` documents the same values in prose. The two must never drift — update both in the
   same change.
 - Units: `rem` for type/spacing, `clamp()` for responsive scaling. No fixed-px breakpoint hacks.
-- Never pure `#000000` or `#FFFFFF` for backgrounds or large surface fills.
+- Never pure `#000000` or `#FFFFFF` for backgrounds or large surface fills, **unless a design
+  explicitly overrides this on purpose** — the current "Modern Utility" system (see `design.md`)
+  does exactly that, by direct, explicit instruction, not by default. The rule still governs any
+  *future* design work unless similarly overridden on purpose; don't silently drift back into
+  pure black/white on some other page without the same kind of explicit call.
 
-## Anti-generic guardrails (once past the ugly prototype)
+## Anti-generic guardrails
 - Every interactive element gets hover, focus-visible, and active states. No exceptions.
 - Animate only `transform` and `opacity`. **Never `transition-all`.** Respect
   `prefers-reduced-motion`.
+- The current design direction is intentionally low-motion ("clarity over decoration" — see
+  `design.md`). Don't add decorative entrance choreography or ambient motion without a fresh,
+  explicit decision to do so; a prior "clinic visit" concept with an elaborate GSAP-driven
+  choreography was built and explicitly rejected — see git history on this branch.
 
 ## Accessibility
 - WCAG 2.1/2.2 **AA** minimum: ≥4.5:1 text contrast, full keyboard navigation, visible focus
