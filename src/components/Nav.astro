@@ -1,5 +1,7 @@
 ---
 import { SITE_NAME } from "@/consts.ts";
+import { Image } from "astro:assets";
+import Isotype from "@/assets/isotype.png";
 
 interface Props {
 	/**
@@ -21,7 +23,9 @@ const isCurrent = (href: string) =>
 
 <header class:list={["nav_wrap", overlap && "overlap"]} data-nav>
   <div class="nav_inner">
-    <a class="nav_logo" href="/" aria-label={SITE_NAME}>{SITE_NAME}</a>
+    <a class="nav_logo" href="/" aria-label={SITE_NAME}>
+			<Image src={Isotype} alt="" width={96} height={187} class="nav_logo_icon" />
+		</a>
     <button
 			class="nav_toggle"
 			type="button"
@@ -144,17 +148,12 @@ const isCurrent = (href: string) =>
 			min-height: var(--nav-height);
 		}
 
-		/* The logo is a wordmark here (no logo asset in this project), so it is
-		   centered like the toggle rather than sized by width like Lumos's own
-		   SVG logo. */
+		/* Icon-only logo (no wordmark): the approved isotype (raster PNG, hence
+		   Image rather than Icon/SVG), centered like the toggle. */
 		.nav_logo {
 			display: flex;
 			align-items: center;
 			color: inherit;
-			font-weight: var(--primary-medium);
-			font-size: var(--text-logo);
-			line-height: var(--line-height-small);
-			letter-spacing: var(--letter-spacing-wide);
 			text-decoration: none;
 			transition: opacity 200ms;
 			@media (hover: hover) {
@@ -162,6 +161,12 @@ const isCurrent = (href: string) =>
 					opacity: 0.6;
 				}
 			}
+		}
+
+		.nav_logo_icon {
+			display: block;
+			width: auto;
+			height: 1.5rem;
 		}
 
 		/* A 2.75rem wide box gives the bars a comfortable tap target; the
