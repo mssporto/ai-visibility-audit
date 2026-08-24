@@ -52,8 +52,6 @@ describe("isBlockedFetchTarget", () => {
   });
 
   it("blocks an IPv4-mapped IPv6 loopback literal", () => {
-    // new URL(...).hostname canonicalizes this to "[::ffff:7f00:1]" before the
-    // guard ever sees it, so the check must recognize the hex-mapped form.
     expect(isBlockedFetchTarget("http://[::ffff:127.0.0.1]/")).toBe(true);
   });
 
