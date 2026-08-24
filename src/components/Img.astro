@@ -14,15 +14,15 @@ type Base = Omit<
 	/**
 	 * An imported asset, a remote `http(s)` URL, or a path to a file in `public/`.
 	 *
-	 * Imports are optimized. Files in `public/` are served as-is — Astro never
-	 * reads them — so they render at their natural size.
+	 * Imports are optimized. Files in `public/` are served as-is; Astro never
+	 * reads them, so they render at their natural size.
 	 *
 	 * A remote URL gets no `srcset` unless you set `variant` explicitly, since
 	 * Astro can only generate real variants for a host listed in
 	 * `image.remotePatterns`. Nothing is output if `src` is missing.
 	 */
 	src: ImageMetadata | string;
-	/** Leave unset on decorative images — renders `alt=""`. */
+	/** Leave unset on decorative images: renders `alt=""`. */
 	alt?: string;
 	/** Overrides the width Astro reads from the source. Omit either dimension and it is inferred. */
 	width?: number;
@@ -47,9 +47,9 @@ type Props = Base &
 				/**
 				 * How the srcset is generated.
 				 *
-				 * - `full-width` — widths up to the source width, tracking the viewport (default)
-				 * - `constrained` — widths up to the source width, capped by `sizes`
-				 * - `densities` — the display size at 1x and 2x, for a fixed-size image
+				 * - `full-width`: widths up to the source width, tracking the viewport (default)
+				 * - `constrained`: widths up to the source width, capped by `sizes`
+				 * - `densities`: the display size at 1x and 2x, for a fixed-size image
 				 */
 				variant?: "full-width";
 				sizes?: never;
@@ -116,7 +116,7 @@ if (import.meta.env.DEV && src && (isPublicPath || isSvg)) {
 	if (sizes !== undefined) inert.push("sizes");
 	if (inert.length) {
 		const why = isPublicPath
-			? `files in public/ are served as-is — import from src/assets to optimize`
+			? `files in public/ are served as-is; import from src/assets to optimize`
 			: `SVG sources are passed through unoptimized`;
 		console.warn(`[lumos] <Img> ignores ${inert.join(", ")}: ${why}.`);
 	}

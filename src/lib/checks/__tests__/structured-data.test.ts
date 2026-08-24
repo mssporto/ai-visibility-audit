@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { checkStructuredData } from "../structured-data";
 
-describe("checkStructuredData — Organization subtype recognition", () => {
+describe("checkStructuredData: Organization subtype recognition", () => {
   it("counts a plain Organization type", () => {
     const html = `<script type="application/ld+json">{"@type":"Organization","name":"Acme"}</script>`;
     expect(checkStructuredData(html).hasOrganization).toBe(true);
@@ -9,7 +9,7 @@ describe("checkStructuredData — Organization subtype recognition", () => {
 
   it("counts Corporation as an Organization subtype (real shopify.com fixture)", () => {
     // Regression: shopify.com's real homepage JSON-LD uses "@type":
-    // "Corporation" — schema.org's own hierarchy is Thing > Organization >
+    // "Corporation"; schema.org's own hierarchy is Thing > Organization >
     // Corporation (https://schema.org/Corporation), so this should count.
     const html = `<script type="application/ld+json">{"@type":"Corporation","name":"Shopify","legalName":"Shopify Inc."}</script>`;
     expect(checkStructuredData(html).hasOrganization).toBe(true);

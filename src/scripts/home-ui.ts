@@ -26,7 +26,7 @@ function init(): void {
     const url = urlInput.value.trim();
     if (!url) return;
 
-    // Basic client-side sanity check only — the real validation (protocol,
+    // Basic client-side sanity check only. The real validation (protocol,
     // SSRF guard, etc.) happens server-side in the audit Function; this is
     // just to avoid navigating to /results with something that isn't a URL
     // at all.
@@ -38,7 +38,7 @@ function init(): void {
     }
 
     submitButton.disabled = true;
-    submitButton.textContent = "Examining…";
+    submitButton.textContent = "Checking…";
     window.location.href = `/results?url=${encodeURIComponent(url)}`;
   });
 }

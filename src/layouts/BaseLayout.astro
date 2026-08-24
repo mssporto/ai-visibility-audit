@@ -4,6 +4,8 @@ import BaseHead from "@/components/BaseHead.astro";
 import SkipLink from "@/components/SkipLink.astro";
 import Nav from "@/components/Nav.astro";
 import Footer from "@/components/Footer.astro";
+import CookieConsent from "@/components/CookieConsent.astro";
+import { GTM_ID } from "@/consts.ts";
 import type { SeoProps } from "@/types.ts";
 
 type Props = SeoProps & {
@@ -21,9 +23,50 @@ const { overlap = false, ...seo } = Astro.props;
 <!doctype html>
 <html lang="en">
 	<head>
+		{
+			/* Consent Mode v2 default — MUST be the literal first script, before
+			   the GTM loader, and MUST use the real gtag() shim rather than a
+			   hand-rolled dataLayer.push(array): GTM's consent listener only
+			   recognizes gtag()'s call shape. See ANALYTICS-CONSENT-SETUP.md §5. */
+		}
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				window.dataLayer.push(arguments);
+			}
+			window.gtag = gtag;
+			gtag("consent", "default", {
+				analytics_storage: "denied",
+				ad_storage: "denied",
+				ad_user_data: "denied",
+				ad_personalization: "denied",
+				wait_for_update: 500,
+			});
+		</script>
+		<script is:inline define:vars={{ gtmId: GTM_ID }}>
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+				const f = d.getElementsByTagName(s)[0];
+				const j = d.createElement(s);
+				const dl = l !== "dataLayer" ? "&l=" + l : "";
+				j.async = true;
+				j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, "script", "dataLayer", gtmId);
+		</script>
 		<BaseHead {...seo} />
 	</head>
 	<body>
+		<noscript>
+			<iframe
+				class="gtm-noscript-frame"
+				src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+				height="0"
+				width="0"
+				title="Google Tag Manager"
+			></iframe>
+		</noscript>
 		<SkipLink />
 		<Nav overlap={overlap} />
 		{
@@ -33,5 +76,13 @@ const { overlap = false, ...seo } = Astro.props;
 			<slot />
 		</main>
 		<Footer />
+		<CookieConsent />
 	</body>
 </html>
+
+<style>
+	.gtm-noscript-frame {
+		display: none;
+		visibility: hidden;
+	}
+</style>

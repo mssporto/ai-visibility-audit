@@ -1,0 +1,194 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import Heading from "@/components/Heading.astro";
+import Paragraph from "@/components/Paragraph.astro";
+
+const categories = [
+	{
+		title: "Necessary",
+		description: "Required to remember your cookie choice. Always on.",
+		cookies: [
+			{
+				name: "cc_cookie",
+				provider: "AI Visibility Audit Tool (own)",
+				duration: "6 months",
+				description: "Stores your cookie preferences so this banner doesn't show again on every visit.",
+			},
+		],
+	},
+	{
+		title: "Analytics",
+		description: "Helps understand which pages get used, via Google Analytics. Only runs if accepted.",
+		cookies: [
+			{
+				name: "_ga",
+				provider: "Google Analytics",
+				duration: "2 years",
+				description: "Distinguishes unique visitors to measure site usage.",
+			},
+			{
+				name: "_ga_*",
+				provider: "Google Analytics",
+				duration: "2 years",
+				description: "Persists session state for this site's GA4 property.",
+			},
+		],
+	},
+];
+---
+
+<BaseLayout title="Cookies" description="This site's cookie policy: what's set, and what isn't.">
+  <Section paddingTop="small" paddingBottom="large" class="cookies">
+    <div class="cookies__inner">
+      <Heading tag="h1" class="cookies__heading">Cookies</Heading>
+
+      <Paragraph class="cookies__lede">
+				Nothing is tracked until you say yes. This table lists every cookie this site can set,
+				by category, and nothing else: no generic template entries for cookies this site
+				doesn't actually use.
+			</Paragraph>
+
+      {
+        categories.map((category) => (
+          <div class="cookies__category">
+            <Heading tag="h2" class="cookies__category-heading">{category.title}</Heading>
+            <Paragraph class="cookies__category-description">{category.description}</Paragraph>
+            <div class="cookies__table-scroll">
+              <table class="cookies__table">
+                <thead>
+                  <tr>
+                    <th scope="col">Cookie</th>
+                    <th scope="col">Provider</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Purpose</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {category.cookies.map((cookie) => (
+                    <tr>
+                      <td>{cookie.name}</td>
+                      <td>{cookie.provider}</td>
+                      <td>{cookie.duration}</td>
+                      <td>{cookie.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))
+      }
+
+      <Heading tag="h2" class="cookies__category-heading">Manage your choice</Heading>
+      <Paragraph>
+				You can change your cookie preferences at any time, including withdrawing consent for
+				analytics.
+			</Paragraph>
+      <button type="button" class="cookies__manage-btn" data-cc="show-preferencesModal">
+				Manage cookies
+			</button>
+
+      <Paragraph class="cookies__meta">Last updated: August 24, 2026.</Paragraph>
+    </div>
+  </Section>
+
+  <style>
+		:global(.cookies .container) {
+			max-width: var(--content-max-width);
+		}
+
+		.cookies__inner {
+			width: 100%;
+		}
+
+		:global(.cookies__heading) {
+			font-size: var(--text-title);
+			letter-spacing: var(--letter-spacing-tight);
+			margin-bottom: var(--space-4);
+		}
+
+		.cookies__lede {
+			color: var(--text);
+			margin-bottom: var(--space-6);
+		}
+
+		.cookies__category {
+			margin-bottom: var(--space-6);
+		}
+
+		:global(.cookies__category-heading) {
+			font-size: var(--text-title);
+			letter-spacing: var(--letter-spacing-tight);
+			margin-bottom: var(--space-1);
+		}
+
+		.cookies__category-description {
+			color: var(--text-faded);
+			font-size: var(--text-small);
+			margin-bottom: var(--space-3);
+		}
+
+		.cookies__table-scroll {
+			overflow-x: auto;
+		}
+
+		.cookies__table {
+			width: 100%;
+			min-width: 32rem;
+			border-collapse: collapse;
+			font-size: var(--text-small);
+		}
+
+		.cookies__table th,
+		.cookies__table td {
+			text-align: left;
+			padding: var(--space-2);
+			border: var(--border-width) solid var(--border);
+			vertical-align: top;
+		}
+
+		.cookies__table th {
+			color: var(--text);
+			font-weight: var(--primary-bold);
+			background: var(--background-2);
+		}
+
+		.cookies__manage-btn {
+			display: inline-flex;
+			align-items: center;
+			min-height: 2.75rem;
+			font-family: var(--primary-family);
+			font-size: var(--text-small);
+			font-weight: var(--primary-medium);
+			color: var(--text);
+			background: transparent;
+			border: var(--border-width) solid var(--text);
+			border-radius: var(--radius-small);
+			padding: 0 var(--space-3);
+			cursor: pointer;
+			transition:
+				background-color 200ms,
+				color 200ms;
+			@media (hover: hover) {
+				&:hover {
+					background: var(--text);
+					color: var(--background-2);
+				}
+			}
+			&:focus-visible {
+				outline: 2px solid var(--text);
+				outline-offset: 2px;
+			}
+			@media (prefers-reduced-motion: reduce) {
+				transition: none;
+			}
+		}
+
+		.cookies__meta {
+			color: var(--text-faded);
+			font-size: var(--text-small);
+			margin-top: var(--space-6);
+		}
+  </style>
+</BaseLayout>

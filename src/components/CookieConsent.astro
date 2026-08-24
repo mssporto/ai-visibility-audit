@@ -1,0 +1,178 @@
+---
+import "vanilla-cookieconsent/dist/cookieconsent.css";
+---
+
+<div id="cc-main"></div>
+
+<script>
+	import { run } from "vanilla-cookieconsent";
+
+	declare global {
+		interface Window {
+			dataLayer: unknown[][];
+			gtag: (...args: unknown[]) => void;
+		}
+	}
+
+	function pushConsentUpdate(cookie: { categories: string[] }) {
+		const granted = cookie.categories.includes("analytics") ? "granted" : "denied";
+		window.dataLayer = window.dataLayer || [];
+		window.gtag("consent", "update", {
+			analytics_storage: granted,
+			ad_storage: "denied",
+			ad_user_data: "denied",
+			ad_personalization: "denied",
+		});
+	}
+
+	run({
+		root: "#cc-main",
+		guiOptions: {
+			consentModal: { layout: "bar", position: "bottom", equalWeightButtons: true },
+			preferencesModal: { layout: "box", equalWeightButtons: true },
+		},
+		categories: {
+			necessary: { enabled: true, readOnly: true },
+			analytics: { autoClear: { cookies: [{ name: /^_ga/ }] } },
+		},
+		language: {
+			default: "en",
+			translations: {
+				en: {
+					consentModal: {
+						title: "Cookie preferences",
+						description:
+							'This site uses a few cookies to understand how it\'s used. Nothing is tracked until you say yes, and you can change your mind anytime. See the <a href="/cookies">cookie policy</a>.',
+						acceptAllBtn: "Accept all",
+						acceptNecessaryBtn: "Reject",
+						showPreferencesBtn: "Manage preferences",
+						closeIconLabel: "Close",
+					},
+					preferencesModal: {
+						title: "Cookie preferences",
+						acceptAllBtn: "Accept all",
+						acceptNecessaryBtn: "Reject",
+						savePreferencesBtn: "Save preferences",
+						closeIconLabel: "Close",
+						sections: [
+							{
+								title: "Necessary",
+								description: "Required to remember your cookie choice. Always on.",
+								linkedCategory: "necessary",
+								cookieTable: {
+									headers: {
+										name: "Cookie",
+										provider: "Provider",
+										duration: "Duration",
+										description: "Purpose",
+									},
+									body: [
+										{
+											name: "cc_cookie",
+											provider: "AI Visibility Audit Tool (own)",
+											duration: "6 months",
+											description:
+												"Stores your cookie preferences so this banner doesn't show again on every visit.",
+										},
+									],
+								},
+							},
+							{
+								title: "Analytics",
+								description:
+									"Helps understand which pages get used, via Google Analytics. Only runs if accepted.",
+								linkedCategory: "analytics",
+								cookieTable: {
+									headers: {
+										name: "Cookie",
+										provider: "Provider",
+										duration: "Duration",
+										description: "Purpose",
+									},
+									body: [
+										{
+											name: "_ga",
+											provider: "Google Analytics",
+											duration: "2 years",
+											description: "Distinguishes unique visitors to measure site usage.",
+										},
+										{
+											name: "_ga_*",
+											provider: "Google Analytics",
+											duration: "2 years",
+											description: "Persists session state for this site's GA4 property.",
+										},
+									],
+								},
+							},
+						],
+					},
+				},
+			},
+		},
+		onFirstConsent: ({ cookie }) => pushConsentUpdate(cookie),
+		onConsent: ({ cookie }) => pushConsentUpdate(cookie),
+		onChange: ({ cookie }) => pushConsentUpdate(cookie),
+	});
+</script>
+
+<style>
+	#cc-main {
+		--cc-font-family: var(--primary-family);
+		--cc-primary-color: var(--text);
+		--cc-secondary-color: var(--text-faded);
+		--cc-bg: var(--background-2);
+		--cc-modal-border-radius: var(--radius-small);
+		--cc-modal-margin: var(--space-3);
+
+		--cc-btn-border-radius: var(--radius-small);
+		--cc-btn-primary-bg: var(--text);
+		--cc-btn-primary-color: var(--background-2);
+		--cc-btn-primary-border-color: var(--text);
+		--cc-btn-primary-hover-bg: var(--text-faded);
+		--cc-btn-primary-hover-color: var(--background-2);
+		--cc-btn-primary-hover-border-color: var(--text-faded);
+
+		--cc-btn-secondary-bg: transparent;
+		--cc-btn-secondary-color: var(--text);
+		--cc-btn-secondary-border-color: var(--text);
+		--cc-btn-secondary-hover-bg: var(--border);
+		--cc-btn-secondary-hover-color: var(--text);
+		--cc-btn-secondary-hover-border-color: var(--text);
+
+		--cc-toggle-on-bg: var(--text);
+		--cc-toggle-on-knob-bg: var(--background-2);
+		--cc-toggle-off-bg: var(--text-faded);
+		--cc-toggle-off-knob-bg: var(--background-2);
+		--cc-toggle-readonly-bg: var(--border);
+		--cc-toggle-readonly-knob-bg: var(--text-faded);
+		--cc-toggle-readonly-knob-icon-color: var(--background-2);
+		--cc-toggle-enabled-icon-color: var(--background-2);
+		--cc-toggle-disabled-icon-color: var(--background-2);
+
+		--cc-cookie-category-block-bg: var(--background-2);
+		--cc-cookie-category-block-border: var(--border);
+		--cc-cookie-category-block-hover-bg: var(--border);
+		--cc-cookie-category-expanded-block-bg: var(--background-2);
+		--cc-cookie-category-expanded-block-hover-bg: var(--border);
+		--cc-section-category-border: var(--border);
+		--cc-separator-border-color: var(--border);
+
+		--cc-footer-bg: var(--background-2);
+		--cc-footer-border-color: var(--border);
+		--cc-footer-color: var(--text);
+
+		--cc-overlay-bg: rgb(0 0 0 / 60%);
+	}
+
+	:global(#cc-main a) {
+		color: var(--text);
+		text-decoration: underline;
+		text-decoration-color: var(--border);
+		text-underline-offset: 0.2em;
+	}
+
+	:global(#cc-main a:hover) {
+		text-decoration-color: var(--text);
+	}
+</style>
