@@ -78,21 +78,31 @@ for this palette. `--dark-900` (`#1f1d1e`) already clears pure black on its own.
 
 ## Typography
 
-- **Font**: Inter (self-hosted via `@fontsource/inter`, weights 400/500/600/700/800), set as
-  Lumos's `--primary-family` token, unchanged from the prior system, still self-hostable.
+- **Font**: Inconsolata (self-hosted via `@fontsource/inconsolata`, weights 400/500/700), set as
+  the `--primary-family` token. Replaced Inter project-wide 2026-08-24, explicit instruction —
+  a monospace face suits a diagnostic/audit tool's "data readout" feel better than a
+  general-purpose sans-serif. Full replacement, not an accent: headings, body, and the wordmark
+  all use the same family, differentiated by weight/size/tracking per context (below), not by
+  swapping typefaces.
 - **Weight tokens**: `--primary-regular` (400), `--primary-medium` (500), `--primary-bold` (700),
   Lumos's own token names, reused directly.
+- **Letter-spacing tokens**: `--letter-spacing-tight` (`-0.02em`, headings), `--letter-spacing-normal`
+  (`0em`, body), `--letter-spacing-wide` (`0.083em`, the nav/footer wordmark only — ~2px at the
+  logo's 24px size, matching the approved isologo spec). A monospace face reads noticeably
+  different at each tracking value, which is the point: one typeface, deliberately varied per
+  context, rather than three different fonts.
 
 | Token | Value | Use |
 |---|---|---|
 | `--text-display` | `clamp(2.25rem, 1.6rem + 3vw, 4rem)` | The landing hero heading. |
 | `--text-title` | `clamp(1.25rem, 1.1rem + 0.8vw, 1.75rem)` | Section headings ("Lab results"). |
 | `--text-score` | `clamp(2.5rem, 2rem + 2vw, 3.5rem)` | The AEO/GEO score-card values. |
+| `--text-logo` | `1.5rem` (24px) | The nav/footer wordmark only, set medium weight + wide tracking. |
 | `--text-body` | `1rem` | Body copy. |
 | `--text-small` | `0.875rem` | Labels, data-row values. |
 | `--text-micro` | `0.75rem` | Corner-widget text, footer copyright. |
 
-These six are app-specific: Lumos's own scale defines a full `display`/`h1`–`h6` ladder this
+These seven are app-specific: Lumos's own scale defines a full `display`/`h1`–`h6` ladder this
 app's two pages don't use at that granularity; same `clamp()` technique, sized to what's actually
 on the page.
 

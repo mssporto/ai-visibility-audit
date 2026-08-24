@@ -1,9 +1,11 @@
 import { isBlockedFetchTarget } from "./ssrf-guard";
 import { buildAuditReport, type AuditReport } from "./score";
+import { SITE_URL } from "../consts.ts";
 
 export class AuditError extends Error {}
 
 const FETCH_TIMEOUT_MS = 8000;
+const USER_AGENT = `ai-visibility-audit/0.1 (+${SITE_URL})`;
 
 async function safeFetch(url: string): Promise<Response> {
   if (isBlockedFetchTarget(url)) {
@@ -13,7 +15,7 @@ async function safeFetch(url: string): Promise<Response> {
   const response = await fetch(url, {
     redirect: "manual",
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    headers: { "User-Agent": "ai-visibility-audit/0.1 (+https://ai-visibility-audit.dahiana.work)" },
+    headers: { "User-Agent": USER_AGENT },
   });
 
   // Manually follow redirects (max 3 hops) so every hop gets re-validated
@@ -32,7 +34,7 @@ async function safeFetch(url: string): Promise<Response> {
     current = await fetch(currentUrl, {
       redirect: "manual",
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-      headers: { "User-Agent": "ai-visibility-audit/0.1 (+https://ai-visibility-audit.dahiana.work)" },
+      headers: { "User-Agent": USER_AGENT },
     });
     hops += 1;
   }

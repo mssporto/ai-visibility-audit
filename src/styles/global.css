@@ -5,11 +5,11 @@
 @layer base, patterns, components, utilities;
 
 /* Only the weights actually referenced (--primary-regular/-medium/-bold =
-   400/500/700) — 600 and 800 were imported but never used, adding dead
-   @font-face rules to this render-blocking stylesheet. */
-@import "@fontsource/inter/400.css" layer(base);
-@import "@fontsource/inter/500.css" layer(base);
-@import "@fontsource/inter/700.css" layer(base);
+   400/500/700) — other weights would add dead @font-face rules to this
+   render-blocking stylesheet. */
+@import "@fontsource/inconsolata/400.css" layer(base);
+@import "@fontsource/inconsolata/500.css" layer(base);
+@import "@fontsource/inconsolata/700.css" layer(base);
 @import "./tokens.css" layer(base);
 @import "./patterns.css" layer(patterns);
 

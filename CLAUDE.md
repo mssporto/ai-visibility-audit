@@ -1,4 +1,4 @@
-# CLAUDE.md: AI Visibility Audit (ai-visibility-audit.dahiana.work)
+# CLAUDE.md: AI Visibility Audit (ai-audit.dahiana.work)
 
 A free, instant AEO + GEO visibility audit: paste a URL, get an AEO score and a GEO score
 (each /100), broken into scored categories with prioritized recommendations. Personal
@@ -13,7 +13,8 @@ free-tier design constraints); only the "Project facts" and "Audit engine" secti
 specific to this one tool.
 
 ## Project facts
-- Domain: `ai-visibility-audit.dahiana.work` (subdomain of an already-owned domain).
+- Domain: `ai-audit.dahiana.work` (subdomain of an already-owned domain; renamed 2026-08-24 from
+  `ai-visibility-audit.dahiana.work` — fewer hyphens, easier to say).
 - Deploy target: Cloudflare Pages, **Free plan**: do not introduce anything that assumes a
   paid plan (see Cloudflare free-tier constraints below).
 - GitHub repo: **always private.** Standing rule, not just for this project.
@@ -231,6 +232,16 @@ console errors) → human merges to `main` to publish. GitHub repo stays **priva
   a visible or breaking change.
 - Create new commits, never `--amend` published work. Never force-push, `reset --hard`, or
   other destructive git ops without explicit confirmation each time.
+- **GitHub email-privacy push rejection (`GH007`)**: if the user has "Block command line pushes
+  that expose my email" enabled on GitHub, a normal push fails with `GH007: Your push would
+  publish a private email address` whenever the commit's author email is a real address rather
+  than their GitHub-issued noreply one. Never propose disabling that protection — the user's
+  privacy choice stands. Never change git config, amend, or rewrite authorship without asking
+  first: on hitting `GH007`, stop and ask the user for their `ID+username@users.noreply.github.com`
+  address (Settings → Emails), then, only with that explicit go-ahead, set `user.email` **locally
+  to this repo** (never `--global`) and amend the *unpushed* commit's author before retrying the
+  push. If the commit is already published (already pushed once before), amending rewrites public
+  history — confirm that tradeoff explicitly before doing it, same bar as any other history rewrite.
 
 ## Build order
 1. SSRF guard, test-first.
