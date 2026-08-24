@@ -37,8 +37,7 @@ function mapRecommendationToCategory(title: string): string | null {
 	if (/about page/i.test(title)) return "entityClarity";
 	if (/is blocked$/i.test(title)) return "crawlerAccess";
 	if (/sitemap\.xml/i.test(title)) return "sitemap";
-	return null; // noindex/nosnippet and anything unmapped surface in the blocking banner or a
-	// general fallback list, not attached to a specific row.
+	return null;
 }
 
 function verdictLine(report: AuditReport): string {
@@ -66,10 +65,8 @@ function renderRecommendation(rec: Recommendation): HTMLParagraphElement {
 	return p;
 }
 
-/** A concrete, plain-language fact for the "What we found" list. The real
- * per-check booleans/values already come back from the API but were being
- * thrown away; this is what actually backs each explanation with evidence
- * instead of just the rolled-up score. */
+/** A concrete, plain-language fact for the "What we found" list — backs
+ * each category's explanation with actual evidence, not just its score. */
 interface Fact {
 	label: string;
 	ok: boolean;
@@ -284,9 +281,8 @@ function renderCategoryRows(container: HTMLElement, report: AuditReport): void {
 		container.appendChild(renderCategoryRow(key, score, report, recsByCategory.get(key)));
 	}
 
-	// Recommendations that don't map to a specific row (currently none, by design,
-	// since noindex/nosnippet surface in the blocking banner instead) fall back here so
-	// nothing is silently dropped if the mapping ever misses something.
+	// Anything mapRecommendationToCategory doesn't map falls back here, so
+	// nothing is silently dropped.
 	const unmapped = report.recommendations.filter((r) => !mapRecommendationToCategory(r.title));
 	if (unmapped.length) {
 		const fallback = document.createElement("div");

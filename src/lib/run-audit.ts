@@ -101,12 +101,8 @@ async function checkLlmsTxtPresence(origin: string): Promise<boolean> {
   }
 }
 
-/**
- * Informational only (not scored): mirrors how the Firecrawl reference
- * tool shows llms.txt "for awareness" without it affecting AEO/GEO. A
- * `Sitemap:` line in robots.txt is the most reliable source; the common
- * default filenames are a fallback for sites that omit it.
- */
+// A `Sitemap:` line in robots.txt is the most reliable source; the common
+// default filenames are a fallback for sites that omit it.
 async function checkSitemapPresence(origin: string, robotsTxt: string | null): Promise<boolean> {
   const declaredSitemap = robotsTxt?.match(/^sitemap:\s*(\S+)/im)?.[1];
   const candidates = declaredSitemap
@@ -121,9 +117,7 @@ async function checkSitemapPresence(origin: string, robotsTxt: string | null): P
     try {
       const response = await safeFetch(candidate);
       if (response.ok) return true;
-    } catch {
-      // try the next candidate
-    }
+    } catch {}
   }
   return false;
 }
