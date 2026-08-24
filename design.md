@@ -87,17 +87,14 @@ for this palette. `--dark-900` (`#1f1d1e`) already clears pure black on its own.
 - **Weight tokens**: `--primary-regular` (400), `--primary-medium` (500), `--primary-bold` (700),
   Lumos's own token names, reused directly.
 - **Letter-spacing tokens**: `--letter-spacing-tight` (`-0.02em`, headings), `--letter-spacing-normal`
-  (`0em`, body), `--letter-spacing-wide` (`0.083em`, the nav/footer wordmark only — ~2px at the
-  logo's 24px size, matching the approved isologo spec). A monospace face reads noticeably
-  different at each tracking value, which is the point: one typeface, deliberately varied per
-  context, rather than three different fonts.
+  (`0em`, body).
 
 | Token | Value | Use |
 |---|---|---|
 | `--text-display` | `clamp(2.25rem, 1.6rem + 3vw, 4rem)` | The landing hero heading. |
 | `--text-title` | `clamp(1.25rem, 1.1rem + 0.8vw, 1.75rem)` | Section headings ("Lab results"). |
 | `--text-score` | `clamp(2.5rem, 2rem + 2vw, 3.5rem)` | The AEO/GEO score-card values. |
-| `--text-logo` | `1.5rem` (24px) | The nav/footer wordmark only, set medium weight + wide tracking. |
+| `--text-logo` | `1.5rem` (24px) | Sizes the nav/footer isotype (icon-only logo, no wordmark). |
 | `--text-body` | `1rem` | Body copy. |
 | `--text-small` | `0.875rem` | Labels, data-row values. |
 | `--text-micro` | `0.75rem` | Corner-widget text, footer copyright. |
@@ -131,15 +128,16 @@ Real Lumos components, wired in as-is (not reimplemented):
    replace `image` default once one ships.
 2. **`SkipLink`**: Lumos's pattern exactly: renders a real `<Button element="link">`, fixed
    off-screen via `translate` until `:focus`, jumps to `#main`.
-3. **`Nav`**: Lumos's full sticky-bar + mobile-toggle pattern, restyled. No logo asset exists for
-   this project, so `nav_logo` renders a text wordmark instead of Lumos's SVG `Icon` (centered in
-   a `min-height: var(--nav-height)` box, matching how Lumos sizes its own logo/toggle boxes).
-   The JS-driven hamburger toggle (slide-open panel, `Escape` to close, closes on outside click,
-   auto-closes above the 48rem breakpoint) is the real component, not a simplified stand-in:
-   two links happened to fit inline before, but the toggle costs nothing to keep and now the nav
-   scales if more links get added later.
-4. **`Footer`**: same treatment: Lumos's structural pattern, text wordmark instead of an SVG
-   logo, real content (tagline, nav links, copyright) in place of Lumos's own scaffold links.
+3. **`Nav`**: Lumos's full sticky-bar + mobile-toggle pattern, restyled. `nav_logo` renders the
+   approved isotype alone (`src/assets/isotype.svg`, via `Icon`, no wordmark — `SITE_NAME` lives
+   in the link's `aria-label` instead, so the accessible name is still the full product name),
+   centered in a `min-height: var(--nav-height)` box, matching how Lumos sizes its own logo/toggle
+   boxes. The JS-driven hamburger toggle (slide-open panel, `Escape` to close, closes on outside
+   click, auto-closes above the 48rem breakpoint) is the real component, not a simplified
+   stand-in: two links happened to fit inline before, but the toggle costs nothing to keep and
+   now the nav scales if more links get added later.
+4. **`Footer`**: same treatment: Lumos's structural pattern, isotype-only logo, real content
+   (tagline, nav links, copyright) in place of Lumos's own scaffold links.
 5. **`Section` / `Heading` / `Paragraph` / `ButtonWrapper` / `Button`**: used on both pages for
    the generic shell (hero section, form submit button, "Back to audit"/"Run another audit"
    links). `Button`'s real hover state swaps `background-color`/`color`/`border-color` via

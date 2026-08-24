@@ -1,12 +1,16 @@
 ---
 import { SITE_NAME, SITE_DESCRIPTION } from "@/consts.ts";
+import { Image } from "astro:assets";
+import Isotype from "@/assets/isotype.png";
 ---
 
 <footer class="footer_wrap">
   <div class="footer_inner">
     <div class="footer_top">
       <div>
-        <a class="footer_logo" href="/" aria-label={SITE_NAME}>{SITE_NAME}</a>
+        <a class="footer_logo" href="/" aria-label={SITE_NAME}>
+					<Image src={Isotype} alt="" width={96} height={187} class="footer_logo_icon" />
+				</a>
         <p class="footer_tagline">{SITE_DESCRIPTION}</p>
       </div>
       <nav aria-label="Footer">
@@ -63,16 +67,12 @@ import { SITE_NAME, SITE_DESCRIPTION } from "@/consts.ts";
 			gap: var(--space-4) var(--space-6);
 		}
 
-		/* Text wordmark here (no logo asset in this project), unlike Lumos's own
-		   width-sized SVG logo. */
+		/* Icon-only logo (no wordmark): the approved isotype (raster PNG, hence
+		   Image rather than Icon/SVG). */
 		.footer_logo {
 			display: inline-flex;
 			align-items: center;
 			color: var(--text);
-			font-weight: var(--primary-medium);
-			font-size: var(--text-logo);
-			line-height: var(--line-height-small);
-			letter-spacing: var(--letter-spacing-wide);
 			text-decoration: none;
 			transition: opacity 200ms;
 			@media (hover: hover) {
@@ -80,6 +80,12 @@ import { SITE_NAME, SITE_DESCRIPTION } from "@/consts.ts";
 					opacity: 0.6;
 				}
 			}
+		}
+
+		.footer_logo_icon {
+			display: block;
+			width: auto;
+			height: 1.5rem;
 		}
 
 		.footer_tagline {
