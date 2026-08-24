@@ -2,7 +2,7 @@
 import "vanilla-cookieconsent/dist/cookieconsent.css";
 ---
 
-<div id="cc-main"></div>
+<div id="cc-root"></div>
 
 <script>
 	import { run } from "vanilla-cookieconsent";
@@ -26,7 +26,7 @@ import "vanilla-cookieconsent/dist/cookieconsent.css";
 	}
 
 	run({
-		root: "#cc-main",
+		root: "#cc-root",
 		guiOptions: {
 			consentModal: { layout: "bar", position: "bottom", equalWeightButtons: true },
 			preferencesModal: { layout: "box", equalWeightButtons: true },
