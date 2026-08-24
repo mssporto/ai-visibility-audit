@@ -1,43 +1,63 @@
-# Astro Starter Kit: Minimal
+# AI Visibility Audit
 
-```sh
-npm create astro@latest -- --template minimal
+A free, instant **AEO** (Answer Engine Optimization) and **GEO** (Generative Engine Optimization)
+visibility audit. Paste a URL, get two scores out of 100 — one for readiness to appear in
+existing answer-engine/search-adjacent AI features, one for readiness to be synthesized or cited
+by generative engines — broken into scored categories with prioritized, sourced recommendations.
+
+**Live**: [ai-audit.dahiana.work](https://ai-audit.dahiana.work)
+
+## What this is (and isn't)
+
+This is a personal portfolio project built to demonstrate frontend and engineering craft, not a
+commercial SEO product. It's fully stateless: every audit re-fetches the target page live, checks
+it against a documented, cited checklist (AI crawler access, structured data, content
+answerability, E-E-A-T signals, entity clarity, meta hygiene, sitemap presence), and scores it.
+Nothing is stored, no email is collected, and there's no paywall.
+
+**It measures structural readiness, not proof of AI visibility.** The scores are an opinionated
+heuristic based on publicly documented guidance (Google's AI-optimization docs, schema.org, and
+similar), not an industry standard, and they can't see your business context, competitors, or
+goals the way a human expert can. Treat a report as a starting point, not a strategy — before
+acting on it, consulting a qualified SEO/AEO/GEO professional is strongly recommended.
+
+## How it works
+
+1. You submit a URL from the homepage.
+2. A Cloudflare Pages Function ([`functions/api/audit.ts`](functions/api/audit.ts)) fetches the
+   page's HTML and `robots.txt` server-side, after passing an SSRF guard that blocks private,
+   loopback, link-local, and cloud-metadata addresses (re-validated after redirects).
+3. Each checklist rule ([`src/lib/checks/`](src/lib/checks)) runs against that HTML with targeted
+   string/regex extraction (no full DOM parse, to stay inside Cloudflare's free-tier CPU budget).
+4. Results are rolled up into weighted AEO/GEO scores ([`src/lib/score.ts`](src/lib/score.ts) —
+   see the comment block above the weight tables for the cited source behind each weighting
+   decision) and rendered as a scannable, keyboard-navigable breakdown.
+
+## Tech stack
+
+- [Astro](https://astro.build) (static output) on Cloudflare Pages
+- A Cloudflare Pages Function for the audit endpoint — no other backend, no database
+- [Vitest](https://vitest.dev) for the SSRF guard, checklist rules, and scoring engine
+- [vanilla-cookieconsent](https://github.com/orestbida/cookieconsent) + GTM/Consent Mode v2 for
+  analytics, opt-in by default
+
+## Local development
+
+```bash
+npm ci
+npm run dev        # http://localhost:4321
+npm test           # vitest
+npx astro check    # type check
+npm run build      # production build to ./dist
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The audit endpoint itself is a Cloudflare Pages Function and won't respond under plain
+`astro dev`; test it locally with `npx wrangler pages dev dist` after a build.
 
-## 🚀 Project Structure
+## License
 
-Inside of your Astro project, you'll see the following folders and files:
+[MIT](LICENSE)
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+---
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Built by [Dahiana](https://dahiana.work).
