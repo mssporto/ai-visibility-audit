@@ -4,7 +4,7 @@ export const SITE_NAME = "AI Visibility Audit Tool";
 export const SITE_DESCRIPTION =
 	"A free, instant AEO + GEO visibility audit. Paste a URL, get your score.";
 /** Canonical origin. Resolves canonical URLs and social images in BaseHead. */
-export const SITE_URL = "https://ai-visibility-audit.dahiana.work";
+export const SITE_URL = "https://ai-audit.dahiana.work";
 /** BCP 47 locale tag used to format dates and numbers. */
 export const SITE_LOCALE = "en-US";
 /** Google Tag Manager container ID. Loaded gated behind Consent Mode v2; see BaseLayout. */
