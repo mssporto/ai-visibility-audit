@@ -1,0 +1,18 @@
+# AI Visibility Audit Tool
+
+> A free, instant AEO + GEO visibility audit. Paste a URL, get an AEO score and a GEO score
+> (each /100), broken into scored categories with prioritized recommendations.
+
+The audit is fully static and stateless: it fetches the submitted page's HTML and robots.txt
+live and scores structural readiness for AI crawlers and generative engines. It does not call
+any LLM to test whether a brand is actually cited — see the Cookies page for the site's privacy
+and tracking policy.
+
+## Pages
+
+- [Run an audit](https://ai-audit.dahiana.work/): Paste a URL to get its AEO/GEO score.
+- [Cookies](https://ai-audit.dahiana.work/cookies/): What's tracked, what isn't, and how to opt out.
+
+## Built by
+
+- [Dahiana](https://dahiana.work/): Portfolio and other work.
