@@ -6,10 +6,10 @@ brand
 
 ## Users
 
-Visitors to Dahiana's portfolio (potential clients, recruiters, collaborators, and fellow
-builders) evaluating her design/engineering craft. They arrive casually (referred from a
-portfolio link), expect to be impressed quickly, and also want the tool itself to genuinely work:
-a real AEO/GEO visibility score for a URL they paste in, not just a pretty shell.
+Visitors arriving from a portfolio link (potential clients, recruiters, collaborators, and
+fellow builders) evaluating the design/engineering craft behind it. They arrive casually, expect
+to be impressed quickly, and also want the tool itself to genuinely work: a real AEO/GEO
+visibility score for a URL they paste in, not just a pretty shell.
 
 ## Product Purpose
 
