@@ -20,9 +20,9 @@ const isCurrent = (href: string) =>
 ---
 
 <header class:list={["nav_wrap", overlap && "overlap"]} data-nav>
-	<div class="nav_inner">
-		<a class="nav_logo" href="/" aria-label={SITE_NAME}>{SITE_NAME}</a>
-		<button
+  <div class="nav_inner">
+    <a class="nav_logo" href="/" aria-label={SITE_NAME}>{SITE_NAME}</a>
+    <button
 			class="nav_toggle"
 			type="button"
 			aria-label="Menu"
@@ -31,35 +31,23 @@ const isCurrent = (href: string) =>
 		>
 			<span class="nav_toggle_icon"></span>
 		</button>
-		<nav class="nav_menu" id="nav-menu" aria-label="Main">
-			<div class="nav_menu_inner">
-				<ul class="nav_links">
-					<li>
+    <nav class="nav_menu" id="nav-menu" aria-label="Main">
+      <div class="nav_menu_inner">
+        <ul class="nav_links">
+          <li>
 						<a class="nav_link" href="/" aria-current={isCurrent("/")}>
 							Run an audit
 						</a>
 					</li>
-					<li>
-						<a
-							class="nav_link"
-							href="https://dahiana.work"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							Built by Dahiana ↗
-						</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</div>
+        </ul>
+      </div>
+    </nav>
+  </div>
 </header>
 
-{
-	/* Without scripting the button can't do anything, so show the links instead. */
-}
+{/* Without scripting the button can't do anything, so show the links instead. */}
 <noscript>
-	<style>
+  <style>
 		.nav_toggle {
 			display: none;
 		}
@@ -70,7 +58,7 @@ const isCurrent = (href: string) =>
 		.nav_menu_inner {
 			opacity: 1;
 		}
-	</style>
+  </style>
 </noscript>
 
 <script>
@@ -137,7 +125,7 @@ const isCurrent = (href: string) =>
 
 		.nav_inner {
 			width: 100%;
-			max-width: var(--dashboard-max-width);
+			max-width: var(--max-width-main);
 			display: flex;
 			flex-wrap: wrap;
 			align-items: center;
@@ -325,8 +313,8 @@ const isCurrent = (href: string) =>
 			}
 
 			.nav_link {
-				/* min-height: 2.75rem carries over from the mobile-menu rule above
-				   — kept at every breakpoint (not just touch-sized ones) since a
+				/* min-height: 2.75rem carries over from the mobile-menu rule above.
+				   It is kept at every breakpoint (not just touch-sized ones) since a
 				   768px+ viewport can still be a touch device. */
 				&[aria-current="page"] {
 					text-decoration: underline;

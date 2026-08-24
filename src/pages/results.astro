@@ -7,64 +7,86 @@ import Button from "@/components/Button.astro";
 ---
 
 <BaseLayout title="Results" description="AEO/GEO visibility audit results.">
-	<Section paddingTop="small" paddingBottom="small" class="results">
-		<div class="results__inner">
-			<div id="loading-state" class="loading-state">
-				<p class="loading-state__text">
-					Examining <span id="loading-url" class="loading-state__url"></span>…
+  <Section paddingTop="small" paddingBottom="small" class="results">
+    <div class="results__inner">
+      <div id="loading-state" class="loading-state">
+        <p class="loading-state__text">
+					Checking <span id="loading-url" class="loading-state__url"></span>…
 				</p>
-			</div>
+      </div>
 
-			<div id="error-state" class="error-state" hidden role="alert">
-				<p id="error-message" class="error-state__message"></p>
-				<ButtonWrapper class="alignment-center">
-					<Button element="link" href="/" variant="link" class="cta-link">
+      <div id="error-state" class="error-state" hidden role="alert">
+        <p id="error-message" class="error-state__message"></p>
+        <ButtonWrapper class="alignment-center">
+          <Button element="link" href="/" variant="link" class="cta-link">
 						← Back to audit
 					</Button>
-				</ButtonWrapper>
-			</div>
+        </ButtonWrapper>
+      </div>
 
-			<div id="dashboard" class="dashboard" hidden>
-				<p id="blocked-banner" class="blocked-banner" hidden role="alert"></p>
+      <div id="dashboard" class="dashboard" hidden>
+        <p id="blocked-banner" class="blocked-banner" hidden role="alert"></p>
 
-				<div class="score-cards">
-					<div class="score-card">
-						<span class="score-card__label">AEO score</span>
-						<span id="aeo-score" class="score-card__value">—</span>
-						<div class="progress-bar">
-							<div id="aeo-bar" class="progress-bar__fill"></div>
-						</div>
-					</div>
-					<div class="score-card">
-						<span class="score-card__label">GEO score</span>
-						<span id="geo-score" class="score-card__value">—</span>
-						<div class="progress-bar">
-							<div id="geo-bar" class="progress-bar__fill"></div>
-						</div>
-					</div>
-				</div>
+        <div class="score-cards">
+          <div class="score-card">
+            <span class="score-card__label">AEO score</span>
+            <span id="aeo-score" class="score-card__value">…</span>
+            <div class="progress-bar">
+              <div id="aeo-bar" class="progress-bar__fill"></div>
+            </div>
+          </div>
+          <div class="score-card">
+            <span class="score-card__label">GEO score</span>
+            <span id="geo-score" class="score-card__value">…</span>
+            <div class="progress-bar">
+              <div id="geo-bar" class="progress-bar__fill"></div>
+            </div>
+          </div>
+        </div>
 
-				<p id="verdict-line" class="dashboard__verdict"></p>
+        <p id="verdict-line" class="dashboard__verdict"></p>
 
-				<div class="results-panel">
-					<Heading tag="h2" class="results-panel__heading">Lab results</Heading>
-					<div id="lab-rows" class="data-rows"></div>
-				</div>
+        <div class="results-panel">
+          <Heading tag="h2" class="results-panel__heading">Detailed breakdown</Heading>
+          <p class="results-panel__hint">
+						Click a row to see what it checks, why it matters, and the sources behind it.
+					</p>
+          <div id="category-rows" class="category-rows"></div>
+        </div>
 
-				<ButtonWrapper>
-					<Button element="link" href="/" variant="link" class="cta-link">
+        <div class="results-panel results-panel--secondary">
+          <Heading tag="h2" class="results-panel__heading">Also checked</Heading>
+          <p class="results-panel__hint">
+						Not part of either score. Shown for context anyway.
+					</p>
+          <div id="also-checked-rows" class="category-rows"></div>
+        </div>
+
+        <ButtonWrapper>
+          <Button element="link" href="/" variant="link" class="cta-link">
 						Run another audit →
 					</Button>
-				</ButtonWrapper>
-			</div>
-		</div>
-	</Section>
+        </ButtonWrapper>
 
-	<script>
+        <p class="disclaimer">
+					This is a free personal project, not a professional SEO service. Scores are
+					an opinionated heuristic, not an industry standard or a guarantee of AI
+					visibility, and search/AI ranking factors change constantly. For a real
+					strategy, work with an SEO professional.
+				</p>
+      </div>
+    </div>
+  </Section>
+
+  <script>
 		import "../scripts/results-ui";
-	</script>
+  </script>
 
-	<style>
+  <style>
+		:global(.results) {
+			flex: 1;
+		}
+
 		:global(.results .container) {
 			max-width: var(--dashboard-max-width);
 		}
@@ -73,7 +95,7 @@ import Button from "@/components/Button.astro";
 			width: 100%;
 		}
 
-		/* Button's "link" variant is deliberately thin (no min-height) — this
+		/* Button's "link" variant is deliberately thin (no min-height); this
 		   restores the 44px touch target without editing the shared component. */
 		:global(.cta-link) {
 			min-height: 2.75rem;
@@ -179,34 +201,63 @@ import Button from "@/components/Button.astro";
 			border: var(--border-width) solid var(--border);
 			border-radius: var(--radius-small);
 			padding: var(--space-4);
+			margin-bottom: var(--space-4);
+		}
+
+		.results-panel--secondary {
+			background: var(--background);
+			border-style: dashed;
 		}
 
 		:global(.results-panel__heading) {
 			font-size: var(--text-title);
 			letter-spacing: var(--letter-spacing-tight);
+			margin: 0 0 var(--space-1);
+		}
+
+		.results-panel__hint {
+			font-size: var(--text-small);
+			color: var(--text-faded);
 			margin: 0 0 var(--space-3);
 		}
 
-		:global(.data-row) {
+		/* Category accordion rows: a real <details>/<summary>, so open/close,
+		   keyboard support, and focus handling all come from the browser for
+		   free. Every rule below targeting a JS-created class needs :global()
+		   (Astro's scoped styles only tag elements present at build time; see
+		   design.md's note on this). */
+		:global(.category-row) {
+			border-bottom: var(--border-width) solid var(--border);
+		}
+		:global(.category-rows .category-row:last-of-type) {
+			border-bottom: none;
+		}
+
+		:global(.category-summary) {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			gap: var(--space-2);
+			min-height: 2.75rem;
 			padding: var(--space-2) 0;
-			border-bottom: var(--border-width) solid var(--border);
+			cursor: pointer;
+			list-style: none;
 		}
-		:global(.data-row:last-of-type) {
-			border-bottom: none;
+		:global(.category-summary::-webkit-details-marker) {
+			display: none;
+		}
+		:global(.category-summary::marker) {
+			content: "";
 		}
 
-		:global(.data-row__label) {
+		:global(.category-summary__label) {
 			font-weight: var(--primary-medium);
 			display: flex;
 			align-items: center;
 			gap: var(--space-2);
 		}
 
-		:global(.data-row__icon) {
+		:global(.category-summary__icon) {
 			display: inline-flex;
 			width: 16px;
 			height: 16px;
@@ -218,37 +269,125 @@ import Button from "@/components/Button.astro";
 			color: var(--background-2);
 			flex-shrink: 0;
 		}
-		:global(.data-row__icon[data-status="pass"]) {
+		:global(.category-summary__icon[data-status="pass"]) {
 			background: var(--success);
 		}
-		:global(.data-row__icon[data-status="fail"]) {
+		:global(.category-summary__icon[data-status="fail"]) {
 			background: var(--error);
 		}
+		:global(.category-summary__icon[data-status="info"]) {
+			background: var(--text-faded);
+		}
 
-		:global(.data-row__value) {
+		:global(.category-summary__value) {
 			font-weight: var(--primary-bold);
 			color: var(--text-faded);
 			font-size: var(--text-small);
+			white-space: nowrap;
 		}
 
-		:global(.data-row__detail) {
-			border-bottom: var(--border-width) solid var(--border);
-			padding: 0 0 var(--space-2);
-			margin: 0 0 var(--space-1);
+		:global(.category-summary__chevron) {
+			flex-shrink: 0;
+			width: 0.6em;
+			height: 0.6em;
+			border-right: var(--border-width) solid var(--text-faded);
+			border-bottom: var(--border-width) solid var(--text-faded);
+			transform: rotate(45deg);
+			transition: transform 200ms;
+			margin-right: 0.2em;
+		}
+		:global(.category-row[open] .category-summary__chevron) {
+			transform: rotate(225deg);
+			margin-right: 0;
+			margin-top: 0.3em;
+		}
+
+		:global(.category-body) {
+			padding: 0 0 var(--space-3);
 			font-size: var(--text-small);
 			color: var(--text-faded);
 		}
-		:global(.data-row__detail p) {
-			margin: var(--space-1) 0;
+		:global(.category-body__text) {
+			margin: 0 0 var(--space-2);
 		}
-		:global(.data-row__detail strong) {
+		:global(.category-body__text strong) {
 			color: var(--text);
+		}
+		:global(.category-body__subheading) {
+			font-weight: var(--primary-bold);
+			color: var(--text);
+			text-transform: uppercase;
+			font-size: var(--text-micro);
+			letter-spacing: 0.04em;
+			margin: var(--space-3) 0 var(--space-1);
+		}
+
+		:global(.category-facts) {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-1);
+		}
+		:global(.category-facts__item) {
+			display: flex;
+			align-items: center;
+			gap: var(--space-2);
+		}
+		:global(.category-facts__mark) {
+			display: inline-flex;
+			width: 14px;
+			height: 14px;
+			flex-shrink: 0;
+			align-items: center;
+			justify-content: center;
+			font-size: 10px;
+			border-radius: 50%;
+			color: var(--background-2);
+		}
+		:global(.category-facts__mark[data-status="pass"]) {
+			background: var(--success);
+		}
+		:global(.category-facts__mark[data-status="fail"]) {
+			background: var(--border);
+			color: var(--text-faded);
+		}
+
+		:global(.category-sources) {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-1);
+		}
+		:global(.category-sources a) {
+			color: var(--text);
+			text-decoration: underline;
+			text-decoration-color: var(--border);
+			text-underline-offset: 0.2em;
+		}
+		:global(.category-sources a:hover) {
+			text-decoration-color: var(--text);
+		}
+
+		:global(.category-body--fallback) {
+			padding-top: var(--space-3);
 		}
 
 		@media (max-width: 480px) {
-			:global(.data-row) {
+			:global(.category-summary) {
 				flex-wrap: wrap;
 			}
 		}
-	</style>
+
+		.disclaimer {
+			max-width: 40rem;
+			margin: var(--space-6) auto 0;
+			color: var(--text-faded);
+			font-size: var(--text-micro);
+			text-align: center;
+		}
+  </style>
 </BaseLayout>

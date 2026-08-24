@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { checkEntityClarity } from "../entity-clarity";
 
-describe("checkEntityClarity — About-page detection", () => {
+describe("checkEntityClarity: About-page detection", () => {
   it("detects a separate /about page", () => {
     const html = `<title>Acme Co</title><a href="/about">About</a>`;
     expect(checkEntityClarity(html).hasAboutPage).toBe(true);

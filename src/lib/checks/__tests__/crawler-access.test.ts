@@ -4,7 +4,7 @@ import { checkCrawlerAccess } from "../crawler-access";
 // Regression fixture: dahiana.work's real robots.txt as of 2026-08-20. It
 // disallows several bots (including ClaudeBot and Google-Extended) in an
 // auto-managed Cloudflare block, then explicitly re-allows them in a later,
-// site-owner-authored block. The correct real-world answer is "allowed" —
+// site-owner-authored block. The correct real-world answer is "allowed";
 // an earlier bug treated the first Disallow match as final and reported
 // these as blocked.
 const DAHIANA_WORK_ROBOTS_TXT = `

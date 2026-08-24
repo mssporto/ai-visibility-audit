@@ -1,8 +1,8 @@
-// Organization's direct schema.org subtypes — a page typed as Corporation,
+// Organization's direct schema.org subtypes: a page typed as Corporation,
 // LocalBusiness, etc. is still legitimately expressing organization-level
 // entity data and should count for the same signal. Source (subtype list
 // as of this writing): https://schema.org/Organization ("More specific
-// Types" section). This is the type hierarchy's first level only — deeper
+// Types" section). This is the type hierarchy's first level only; deeper
 // subtypes (e.g. LocalBusiness's own children like Restaurant or Store)
 // aren't enumerated here; a known, documented gap, not an oversight.
 const ORGANIZATION_SUBTYPES = new Set([
@@ -67,7 +67,7 @@ export function checkStructuredData(html: string): StructuredDataResult {
       const parsed = JSON.parse(block[1]);
       collectTypes(parsed, types);
     } catch {
-      // Malformed JSON-LD block — skip it, don't crash the audit.
+      // Malformed JSON-LD block: skip it, don't crash the audit.
     }
   }
 

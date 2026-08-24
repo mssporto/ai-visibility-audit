@@ -8,7 +8,7 @@ type Props = SeoProps;
 const {
 	title,
 	description = SITE_DESCRIPTION,
-	// No dedicated OG image asset exists yet — falls back to the favicon
+	// No dedicated OG image asset exists yet, so it falls back to the favicon
 	// rather than Lumos's own placeholder `/og-image.jpg`, which doesn't
 	// exist in this project. Replace once a real social-share image ships.
 	image = "/favicon.svg",

@@ -7,7 +7,7 @@ type Slots = {
  * A slot's rendered HTML, or `""` when it renders nothing visible.
  *
  * `slots.has` is not sufficient on its own: a slot holding an expression that
- * renders nothing — an empty array's `map`, say — still counts as provided.
+ * renders nothing (an empty array's `map`, say) still counts as provided.
  * Comments are stripped before the check, so markup left behind by a comment
  * or by editor tooling does not read as content.
  */

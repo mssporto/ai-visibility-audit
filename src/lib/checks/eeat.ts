@@ -7,7 +7,7 @@ export interface EeatResult {
 
 /**
  * Google's own recommended way to expose a byline date is JSON-LD
- * `datePublished`/`dateModified` on an Article/BlogPosting/CreativeWork —
+ * `datePublished`/`dateModified` on an Article/BlogPosting/CreativeWork,
  * not just a visible <time> tag or article:published_time meta tag:
  * https://developers.google.com/search/docs/appearance/publication-dates
  * A <time>-only check misses this entirely (confirmed live: dahiana.work's
@@ -24,7 +24,7 @@ function hasJsonLdDateField(html: string): boolean {
     try {
       if (containsDateField(JSON.parse(block[1]))) return true;
     } catch {
-      // Malformed JSON-LD block — skip it, don't crash the audit.
+      // Malformed JSON-LD block: skip it, don't crash the audit.
     }
   }
   return false;
