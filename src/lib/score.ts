@@ -1,5 +1,6 @@
 import { checkCrawlerAccess } from "./checks/crawler-access";
 import { checkContentQuality } from "./checks/content-quality";
+import { checkContentSignal, type ContentSignalResult } from "./checks/content-signal";
 import { checkEeat } from "./checks/eeat";
 import { checkEntityClarity } from "./checks/entity-clarity";
 import { checkIndexability } from "./checks/indexability";
@@ -16,10 +17,12 @@ export interface AuditReport {
   url: string;
   aeoScore: number;
   geoScore: number;
-  hasSitemap: boolean; // informational only — not counted in either score
-  hasLlmsTxt: boolean; // informational only — Google explicitly ignores llms.txt
-  blockedFromIndexing: boolean; // noindex present — both scores are forced to 0 below
-  blockedFromSnippets: boolean; // nosnippet present — page can't appear in any snippet
+  hasSitemap: boolean; // informational only, not counted in either score
+  hasLlmsTxt: boolean; // informational only: Google explicitly ignores llms.txt
+  hasViewport: boolean; // informational only: real mobile-friendliness needs rendering, not just a tag check
+  contentSignal: ContentSignalResult; // informational only: not a Google-recognized directive yet
+  blockedFromIndexing: boolean; // noindex present: both scores are forced to 0 below
+  blockedFromSnippets: boolean; // nosnippet present: page can't appear in any snippet
   categories: {
     crawlerAccess: ReturnType<typeof checkCrawlerAccess>;
     metaHygiene: ReturnType<typeof checkMetaHygiene>;
@@ -38,28 +41,28 @@ export interface AuditReport {
 // Sources backing these specific choices:
 // - Crawler access weighted heaviest in both: "ensure your content is
 //   crawlable, as Google Search generative AI models use publicly
-//   accessible, crawlable content" — Google's official generative-AI-search
+//   accessible, crawlable content", per Google's official generative-AI-search
 //   guidance: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide
-// - Sitemap scored (not just informational) for the same reason — it's
+// - Sitemap scored (not just informational) for the same reason: it's
 //   part of "follow crawling best practices" in the same guidance, tied to
 //   meeting the "Search technical requirements" required for AI-feature
 //   eligibility. Weighted higher in AEO than GEO because the evidence for
 //   it is Google-specific; no equivalent official statement exists for
 //   third-party generative engines.
 // - llms.txt deliberately excluded from both: "Google Search itself
-//   doesn't use them... neither helps nor harms your site's visibility" —
-//   same guidance, "Mythbusting generative AI search" section.
+//   doesn't use them... neither helps nor harms your site's visibility,"
+//   per the same guidance's "Mythbusting generative AI search" section.
 // - Structured data weighted moderately, not heavily, in both: "Structured
 //   data isn't required for generative AI search... However, it's a good
-//   idea to continue using it as part of your overall SEO strategy" — same
-//   guidance.
+//   idea to continue using it as part of your overall SEO strategy," per the
+//   same guidance.
 // - E-E-A-T counted only in AEO (it's a Google ranking-signal proxy, not a
 //   documented factor for third-party generative engines); entity clarity
 //   counted only in GEO, per the Firecrawl reference tool's own stated
 //   rationale ("more influential for third-party GEO engines than for
-//   Google") — an idea borrowed from that tool, not an official source.
+//   Google"), an idea borrowed from that tool, not an official source.
 // - Content quality weighted heavier in GEO than AEO, per the Princeton GEO
-//   study (arXiv:2311.09735) as cited by the Firecrawl reference tool —
+//   study (arXiv:2311.09735) as cited by the Firecrawl reference tool;
 //   we haven't independently verified that study ourselves.
 const AEO_WEIGHTS = {
   crawlerAccess: 25,
@@ -99,7 +102,7 @@ function buildRecommendations(
       priority: "P0",
       title: "noindex is blocking this page entirely",
       detail:
-        "This page has <meta name=\"robots\" content=\"noindex\">, which excludes it from Google Search and AI features altogether — nothing else on this page matters until this is removed.",
+        "This page has <meta name=\"robots\" content=\"noindex\">, which excludes it from Google Search and AI features altogether. Nothing else on this page matters until this is removed.",
     });
   }
   if (indexability.nosnippet) {
@@ -107,7 +110,7 @@ function buildRecommendations(
       priority: "P0",
       title: "nosnippet is blocking any snippet",
       detail:
-        "This page has a nosnippet directive, which prevents any snippet — including AI Overviews/AI Mode — from showing this page's content.",
+        "This page has a nosnippet directive, which prevents any snippet (including AI Overviews/AI Mode) from showing this page's content.",
     });
   }
   if (!categories.eeat.hasAuthor) {
@@ -128,7 +131,7 @@ function buildRecommendations(
     recs.push({
       priority: "P1",
       title: "FAQPage structured data",
-      detail: "Add FAQPage JSON-LD for question/answer content — highly citable by AI.",
+      detail: "Add FAQPage JSON-LD for question/answer content: highly citable by AI.",
     });
   }
   if (!categories.structuredData.hasOrganization) {
@@ -171,7 +174,7 @@ function buildRecommendations(
     recs.push({
       priority: "P0",
       title: `${bot.label} is blocked`,
-      detail: `robots.txt disallows ${bot.name} — this AI crawler cannot access the page at all.`,
+      detail: `robots.txt disallows ${bot.name}: this AI crawler cannot access the page at all.`,
     });
   }
   if (!hasSitemap) {
@@ -179,7 +182,7 @@ function buildRecommendations(
       priority: "P1",
       title: "sitemap.xml",
       detail:
-        "Add a working sitemap.xml (and declare it in robots.txt) — a standard crawlability/discoverability signal per Google's generative-AI-search guidance.",
+        "Add a working sitemap.xml (and declare it in robots.txt): a standard crawlability/discoverability signal per Google's generative-AI-search guidance.",
     });
   }
 
@@ -193,6 +196,7 @@ export function buildAuditReport(
   siteOrigin: string,
   hasSitemap: boolean,
   hasLlmsTxt: boolean,
+  xRobotsTag: string | null,
 ): AuditReport {
   const categories = {
     crawlerAccess: checkCrawlerAccess(robotsTxt),
@@ -202,7 +206,8 @@ export function buildAuditReport(
     eeat: checkEeat(html, siteOrigin),
     entityClarity: checkEntityClarity(html),
   };
-  const indexability = checkIndexability(html);
+  const indexability = checkIndexability(html, xRobotsTag);
+  const contentSignal = checkContentSignal(robotsTxt);
 
   const scores = {
     crawlerAccess: categories.crawlerAccess.score,
@@ -215,8 +220,8 @@ export function buildAuditReport(
   };
 
   // A noindex directive excludes the page from Search (and therefore AI
-  // features) entirely, regardless of how well every other check scores —
-  // confirmed by Google's own documentation (see checkIndexability's
+  // features) entirely, regardless of how well every other check scores.
+  // Confirmed by Google's own documentation (see checkIndexability's
   // comment). Reporting a non-zero score for a page Google won't show at
   // all would be actively misleading, not just incomplete.
   const aeoScore = indexability.noindex ? 0 : weightedTotal(AEO_WEIGHTS, scores);
@@ -228,6 +233,8 @@ export function buildAuditReport(
     geoScore,
     hasSitemap,
     hasLlmsTxt,
+    hasViewport: !!categories.metaHygiene.viewport,
+    contentSignal,
     blockedFromIndexing: indexability.noindex,
     blockedFromSnippets: indexability.nosnippet,
     categories,

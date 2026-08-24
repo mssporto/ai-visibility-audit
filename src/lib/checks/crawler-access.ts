@@ -22,7 +22,7 @@ interface RobotsGroup {
  * consecutive `User-agent:` lines share the directives that follow them,
  * until the next `User-agent:` line starts a new record. A bot name can
  * legally appear in more than one group across the file (e.g. a platform's
- * auto-managed block followed by the site owner's own override block) —
+ * auto-managed block followed by the site owner's own override block);
  * those groups get merged per-bot below, not treated as independent.
  */
 function parseRobotsGroups(robotsTxt: string): RobotsGroup[] {
@@ -59,7 +59,7 @@ function parseRobotsGroups(robotsTxt: string): RobotsGroup[] {
       current.directives.push({ type: "allow", path: allowMatch[1].trim() });
     }
     // Other directives (Sitemap, Content-Signal, Crawl-delay, etc.) are
-    // intentionally ignored here — this check only answers "is the bot
+    // intentionally ignored here: this check only answers "is the bot
     // blocked from the whole site", not the newer usage-permission signals.
   }
   if (current) groups.push(current);
@@ -71,7 +71,7 @@ function parseRobotsGroups(robotsTxt: string): RobotsGroup[] {
  * A bot is blocked from the whole site if the merged directives from every
  * group naming it (or, if none name it specifically, every wildcard `*`
  * group) contain a `Disallow: /` that isn't matched by an equally-specific
- * `Allow: /` — ties go to Allow, matching documented crawler behavior
+ * `Allow: /`; ties go to Allow, matching documented crawler behavior
  * (e.g. Google's robots.txt spec) where a later, equally-specific rule for
  * the same agent overrides an earlier one.
  */

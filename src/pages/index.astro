@@ -4,32 +4,23 @@ import Section from "@/components/Section.astro";
 import Heading from "@/components/Heading.astro";
 import Paragraph from "@/components/Paragraph.astro";
 import Button from "@/components/Button.astro";
+import ContentWrapper from '@/components/ContentWrapper.astro';
 ---
 
-<BaseLayout description="A free AEO/GEO visibility audit — paste a URL, get your score.">
-	<Section
-		align="center"
-		paddingTop="even"
-		paddingBottom="even"
-		fullHeight
-		class="landing"
-	>
-		<div
-			class="corner-widget corner-widget--clock"
-			id="corner-clock"
-			aria-hidden="true"
-		>
-		</div>
+<BaseLayout description="A free AEO/GEO visibility audit. Paste a URL, get your score." title="AI Visibility Audit Tool">
+  <Section align="center" paddingTop="even" class="landing" fullHeight={true} paddingBottom="even">
+    <ContentWrapper centered={true}>
 
-		<Heading tag="h1" class="landing__heading">AI Visibility Audit</Heading>
-		<Paragraph class="landing__sub">
-			Check how visible your site is to AI search and answer engines — free, instant.
+      <Heading tag="h1" class="landing__heading">AI Visibility Audit</Heading>
+      <Paragraph class="landing__sub">
+			Check how visible your site is to AI search and answer engines: free and instant.
 		</Paragraph>
+    </ContentWrapper>
 
-		<form id="checkin-form" class="input-group" novalidate>
-			<label for="url-input" class="input-group__label">Site URL</label>
-			<div class="input-group__row">
-				<input
+    <form id="checkin-form" class="input-group" novalidate>
+      <label for="url-input" class="input-group__label">Site URL</label>
+      <div class="input-group__row">
+        <input
 					type="url"
 					id="url-input"
 					name="url"
@@ -37,17 +28,17 @@ import Button from "@/components/Button.astro";
 					placeholder="https://example.com"
 					required
 				/>
-				<Button type="submit" id="checkin-submit">Run audit</Button>
-			</div>
-			<p id="checkin-status" class="landing__status" role="status"></p>
-		</form>
-	</Section>
+        <Button id="checkin-submit" type="submit">Run audit</Button>
+      </div>
+      <p id="checkin-status" class="landing__status" role="status"></p>
+    </form>
+  </Section>
 
-	<script>
+  <script>
 		import "../scripts/home-ui";
-	</script>
+  </script>
 
-	<style>
+  <style>
 		:global(.landing) {
 			min-height: calc(100svh - var(--nav-height));
 			justify-content: center;
@@ -134,5 +125,5 @@ import Button from "@/components/Button.astro";
 				display: none;
 			}
 		}
-	</style>
+  </style>
 </BaseLayout>

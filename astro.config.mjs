@@ -5,4 +5,25 @@ import { SITE_URL } from './src/consts.ts';
 // https://astro.build/config
 export default defineConfig({
 	site: SITE_URL,
+	security: {
+		// Astro emits a <meta http-equiv="content-security-policy"> with hashes
+		// for every script/style it bundles. GTM injects gtm.js itself, so it
+		// needs an explicit allow-list entry alongside those auto-generated
+		// hashes for our own bundled scripts.
+		csp: {
+			scriptDirective: {
+				resources: ["'self'", "https://www.googletagmanager.com"],
+			},
+			directives: [
+				"default-src 'self'",
+				"img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
+				"font-src 'self'",
+				"connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+				"frame-src https://www.googletagmanager.com",
+				"object-src 'none'",
+				"base-uri 'self'",
+				"form-action 'none'",
+			],
+		},
+	},
 });

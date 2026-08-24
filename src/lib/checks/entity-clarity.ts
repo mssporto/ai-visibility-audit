@@ -27,8 +27,8 @@ export function checkEntityClarity(html: string): EntityClarityResult {
   // known brand name as input, which this stateless single-fetch audit doesn't have.
   const brandInTitle = title.split(/\s+/).length > 1;
 
-  // A separate /about page, OR an in-page anchor section (#about, #about-us)
-  // — single-page sites commonly use the latter and shouldn't be penalized
+  // A separate /about page, OR an in-page anchor section (#about, #about-us):
+  // single-page sites commonly use the latter and shouldn't be penalized
   // for it just because they don't have a dedicated URL.
   const hasAboutPage =
     /href=["'][^"']*\/about[^"']*["']/i.test(html) ||

@@ -3,36 +3,27 @@ import { SITE_NAME, SITE_DESCRIPTION } from "@/consts.ts";
 ---
 
 <footer class="footer_wrap">
-	<div class="footer_inner">
-		<div class="footer_top">
-			<div>
-				<a class="footer_logo" href="/" aria-label={SITE_NAME}>{SITE_NAME}</a>
-				<p class="footer_tagline text-style-small">{SITE_DESCRIPTION}</p>
-			</div>
-			<nav aria-label="Footer">
-				<ul class="footer_links">
-					<li><a class="footer_link" href="/">Run an audit</a></li>
-					<li>
-						<a
-							class="footer_link"
-							href="https://dahiana.work"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							Portfolio
-						</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-		<div class="footer_bottom">
-			<p class="footer_copyright text-style-small">
+  <div class="footer_inner">
+    <div class="footer_top">
+      <div>
+        <a class="footer_logo" href="/" aria-label={SITE_NAME}>{SITE_NAME}</a>
+        <p class="footer_tagline">{SITE_DESCRIPTION}</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="footer_links">
+          <li><a class="footer_link" href="https://dahiana.work" target="_blank" rel="noopener noreferrer">Built by Dahiana</a></li>
+          <li><a class="footer_link" href="/cookies">Cookies</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer_bottom">
+      <p class="footer_copyright text-style-small">
 				&copy; <span id="year">{new Date().getFullYear()}</span>&#160;{
 					SITE_NAME
 				}
 			</p>
-		</div>
-	</div>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -53,11 +44,12 @@ import { SITE_NAME, SITE_DESCRIPTION } from "@/consts.ts";
 			background-color: var(--background-2);
 			color: var(--text);
 			border-top: var(--border-width) solid var(--border);
+			opacity: 1;
 		}
 
 		.footer_inner {
 			width: 100%;
-			max-width: var(--dashboard-max-width);
+			max-width: var(--max-width-main);
 			display: flex;
 			flex-direction: column;
 			gap: var(--space-6);
@@ -122,6 +114,8 @@ import { SITE_NAME, SITE_DESCRIPTION } from "@/consts.ts";
 		.footer_bottom {
 			padding-top: var(--space-4);
 			border-top: var(--border-width) solid var(--border);
+			display: flex;
+			justify-content: center;
 		}
 
 		.footer_copyright {
