@@ -13,12 +13,34 @@ function isPrivateIPv4(hostname: string): boolean {
   return false;
 }
 
+/**
+ * Decodes the trailing two hex groups of an embedded-IPv4 IPv6 literal (the
+ * form `url.hostname` actually contains, e.g. "7f00:1" for 127.0.0.1) back
+ * into dotted-decimal, so it can be run through `isPrivateIPv4`.
+ */
+function ipv4FromHexGroups(high: string, low: string): string {
+  const hex = high.padStart(4, "0") + low.padStart(4, "0");
+  const bytes = [hex.slice(0, 2), hex.slice(2, 4), hex.slice(4, 6), hex.slice(6, 8)];
+  return bytes.map((byte) => parseInt(byte, 16)).join(".");
+}
+
 function isPrivateIPv6(hostname: string): boolean {
   const normalized = hostname.toLowerCase().replace(/^\[|\]$/g, "");
   if (normalized === "::1") return true; // loopback
   if (normalized === "::") return true; // unspecified
   if (/^f[cd][0-9a-f]{2}:/.test(normalized)) return true; // fc00::/7 unique-local
   if (/^fe80:/.test(normalized)) return true; // link-local
+
+  // IPv4-mapped (::ffff:0:0/96) and NAT64 (64:ff9b::/96) addresses embed a
+  // real IPv4 address in the last 32 bits. `new URL(...)` canonicalizes any
+  // dotted-decimal or hex form of these into "<prefix>:<hex>:<hex>" before
+  // this function ever sees it, so the embedded address must be decoded and
+  // re-checked against the IPv4 blocklist rather than treated as opaque IPv6.
+  const embedded =
+    normalized.match(/^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/) ??
+    normalized.match(/^64:ff9b::([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+  if (embedded && isPrivateIPv4(ipv4FromHexGroups(embedded[1], embedded[2]))) return true;
+
   return false;
 }
 

@@ -50,4 +50,30 @@ describe("isBlockedFetchTarget", () => {
   it("blocks IPv6 unique-local addresses (fc00::/7)", () => {
     expect(isBlockedFetchTarget("http://[fd00::1]/")).toBe(true);
   });
+
+  it("blocks an IPv4-mapped IPv6 loopback literal", () => {
+    // new URL(...).hostname canonicalizes this to "[::ffff:7f00:1]" before the
+    // guard ever sees it, so the check must recognize the hex-mapped form.
+    expect(isBlockedFetchTarget("http://[::ffff:127.0.0.1]/")).toBe(true);
+  });
+
+  it("blocks an IPv4-mapped IPv6 cloud-metadata literal", () => {
+    expect(isBlockedFetchTarget("http://[::ffff:169.254.169.254]/")).toBe(true);
+  });
+
+  it("blocks an IPv4-mapped IPv6 private 10.0.0.0/8 literal", () => {
+    expect(isBlockedFetchTarget("http://[::ffff:10.0.0.1]/")).toBe(true);
+  });
+
+  it("blocks the already-canonicalized hex form of an IPv4-mapped address", () => {
+    expect(isBlockedFetchTarget("http://[::ffff:a9fe:a9fe]/")).toBe(true);
+  });
+
+  it("allows an IPv4-mapped IPv6 literal for a public address", () => {
+    expect(isBlockedFetchTarget("http://[::ffff:8.8.8.8]/")).toBe(false);
+  });
+
+  it("blocks a NAT64-mapped loopback literal (64:ff9b::/96)", () => {
+    expect(isBlockedFetchTarget("http://[64:ff9b::127.0.0.1]/")).toBe(true);
+  });
 });
