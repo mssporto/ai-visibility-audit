@@ -12,13 +12,9 @@ export interface CategoryContent {
   links: CategoryLink[];
 }
 
-/**
- * One entry per scored category (see `score.ts`'s `AEO_WEIGHTS`/`GEO_WEIGHTS`
- * comment block for the weighting rationale: this file is the "why should a
- * visitor care" explanation, not the "why did we weight it this way" one).
- * Every link here is a real, load-bearing citation, not decoration, so
- * double-check a URL still resolves before changing or adding one.
- */
+// One entry per scored category. See `score.ts`'s AEO_WEIGHTS/GEO_WEIGHTS
+// comment for the weighting rationale; this is the "why it matters to a
+// visitor" copy instead. Links are real citations: verify before changing.
 export const CATEGORY_CONTENT: Record<string, CategoryContent> = {
   crawlerAccess: {
     label: "Crawler Access",
@@ -127,12 +123,7 @@ export const CATEGORY_CONTENT: Record<string, CategoryContent> = {
   },
 };
 
-/**
- * Shown separately from the scored categories above, clearly marked as not
- * scored. Google's own position is explicit (quoted directly in `why`
- * below), so the UI has to be equally explicit that this isn't a hidden
- * eighth scoring category.
- */
+// Shown separately from the scored categories above, not as an eighth one.
 export const LLMS_TXT_CONTENT: CategoryContent = {
   label: "llms.txt",
   what: "An llms.txt file at the site root, a proposed (not standardized) convention some AI tools use to find a curated summary of a site.",
@@ -145,11 +136,7 @@ export const LLMS_TXT_CONTENT: CategoryContent = {
   ],
 };
 
-/**
- * Same "shown but not scored" treatment as llms.txt above, for the same
- * reason: it's a real signal, just not one this audit currently has grounds
- * to weight into either score.
- */
+// Same "shown but not scored" treatment as llms.txt above.
 export const VIEWPORT_CONTENT: CategoryContent = {
   label: "Viewport meta tag",
   what: 'Whether the page declares a `<meta name="viewport">` tag, the basic signal a page is meant to adapt to different screen sizes.',
