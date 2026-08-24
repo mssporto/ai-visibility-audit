@@ -1,6 +1,12 @@
 .DS_Store
 .claude/
 
+# internal AI-agent working docs — not published; each fork/clone can
+# decide its own conventions rather than inheriting ours
+CLAUDE.md
+PRODUCT.md
+design.md
+
 # build output
 dist/
 .astro/
