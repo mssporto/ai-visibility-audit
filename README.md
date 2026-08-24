@@ -9,11 +9,8 @@ by generative engines — broken into scored categories with prioritized, source
 
 ## What this is (and isn't)
 
-This is a personal portfolio project built to demonstrate frontend and engineering craft, not a
-commercial SEO product. It's fully stateless: every audit re-fetches the target page live, checks
-it against a documented, cited checklist (AI crawler access, structured data, content
-answerability, E-E-A-T signals, entity clarity, meta hygiene, sitemap presence), and scores it.
-Nothing is stored, no email is collected, and there's no paywall.
+This is a personal portfolio project, not a commercial SEO product. It's fully stateless: every audit re-fetches the target page live, checks
+it against a documented, cited checklist (AI crawler access, structured data, content answerability, E-E-A-T signals, entity clarity, meta hygiene, sitemap presence), and scores it. Nothing is stored, no email is collected, and there's no paywall.
 
 **It measures structural readiness, not proof of AI visibility.** The scores are an opinionated
 heuristic based on publicly documented guidance (Google's AI-optimization docs, schema.org, and
