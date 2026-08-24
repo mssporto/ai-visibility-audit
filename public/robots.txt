@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# The same AI-crawler user agents this tool's own checklist audits for.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://ai-audit.dahiana.work/sitemap-index.xml

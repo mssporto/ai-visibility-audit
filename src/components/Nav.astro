@@ -1,0 +1,332 @@
+---
+import { SITE_NAME } from "@/consts.ts";
+import { Image } from "astro:assets";
+import Isotype from "@/assets/isotype.png";
+
+interface Props {
+	/**
+	 * Fix the nav over the page rather than letting it stick in flow, so the
+	 * first section starts underneath it. Give that section
+	 * `paddingTop="navoverlap"` to clear the bar.
+	 */
+	overlap?: boolean;
+}
+
+const { overlap = false } = Astro.props;
+
+/** Marks the link for the page being viewed. Trailing slashes are ignored. */
+const isCurrent = (href: string) =>
+	Astro.url.pathname.replace(/\/+$/, "") === href.replace(/\/+$/, "")
+		? "page"
+		: undefined;
+---
+
+<header class:list={["nav_wrap", overlap && "overlap"]} data-nav>
+  <div class="nav_inner">
+    <a class="nav_logo" href="/" aria-label={SITE_NAME}>
+			<Image src={Isotype} alt="" width={96} height={187} class="nav_logo_icon" />
+		</a>
+    <button
+			class="nav_toggle"
+			type="button"
+			aria-label="Menu"
+			aria-expanded="false"
+			aria-controls="nav-menu"
+		>
+			<span class="nav_toggle_icon"></span>
+		</button>
+    <nav class="nav_menu" id="nav-menu" aria-label="Main">
+      <div class="nav_menu_inner">
+        <ul class="nav_links">
+          <li>
+						<a class="nav_link" href="/" aria-current={isCurrent("/")}>
+							Run an audit
+						</a>
+					</li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+
+{/* Without scripting the button can't do anything, so show the links instead. */}
+<noscript>
+  <style>
+		.nav_toggle {
+			display: none;
+		}
+		.nav_menu {
+			grid-template-rows: 1fr;
+			visibility: visible;
+		}
+		.nav_menu_inner {
+			opacity: 1;
+		}
+  </style>
+</noscript>
+
+<script>
+	const nav = document.querySelector<HTMLElement>("[data-nav]");
+	const toggle = nav?.querySelector<HTMLButtonElement>(".nav_toggle");
+
+	if (nav && toggle) {
+		const setOpen = (open: boolean) => {
+			nav.toggleAttribute("data-open", open);
+			toggle.setAttribute("aria-expanded", String(open));
+		};
+
+		toggle.addEventListener("click", () => {
+			setOpen(toggle.getAttribute("aria-expanded") !== "true");
+		});
+
+		nav.querySelectorAll("a").forEach((link) => {
+			link.addEventListener("click", () => setOpen(false));
+		});
+
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Escape" && nav.hasAttribute("data-open")) {
+				setOpen(false);
+				toggle.focus();
+			}
+		});
+
+		/* A click on the toggle lands inside the nav, so it stays its own job. */
+		document.addEventListener("click", (event) => {
+			const target = event.target;
+			if (!nav.hasAttribute("data-open") || !(target instanceof Node)) return;
+			if (!nav.contains(target)) setOpen(false);
+		});
+
+		/* Matches the breakpoint below, where every link is shown anyway. */
+		window
+			.matchMedia("(width >= 48rem)")
+			.addEventListener("change", (event) => {
+				if (event.matches) setOpen(false);
+			});
+	}
+</script>
+
+<style is:global>
+	@layer components {
+		.nav_wrap {
+			position: sticky;
+			top: 0;
+			z-index: 50;
+			display: flex;
+			justify-content: center;
+			padding-inline: var(--site-margin);
+			background-color: var(--background-2);
+			color: var(--text);
+			border-bottom: var(--border-width) solid var(--border);
+
+			/* Out of flow, so the page starts at the top of the viewport instead
+			   of below the bar. */
+			&.overlap {
+				position: fixed;
+				inset-inline: 0;
+			}
+		}
+
+		.nav_inner {
+			width: 100%;
+			max-width: var(--max-width-main);
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			/* No row gap: a closed menu would still hold the bar open by it. The
+			   panel spaces itself from inside instead. */
+			gap: 0 var(--space-6);
+		}
+
+		/* The bar row carries `--nav-height` rather than the header, so the bar
+		   stays that tall when the mobile menu grows the header beneath it.
+		   The header itself has no vertical padding: anything else offsetting
+		   against `--nav-height` would be off by it. */
+		.nav_logo,
+		.nav_toggle {
+			min-height: var(--nav-height);
+		}
+
+		/* Icon-only logo (no wordmark): the approved isotype (raster PNG, hence
+		   Image rather than Icon/SVG), centered like the toggle. */
+		.nav_logo {
+			display: flex;
+			align-items: center;
+			color: inherit;
+			text-decoration: none;
+			transition: opacity 200ms;
+			@media (hover: hover) {
+				&:hover {
+					opacity: 0.6;
+				}
+			}
+		}
+
+		.nav_logo_icon {
+			display: block;
+			width: auto;
+			height: 1.5rem;
+		}
+
+		/* A 2.75rem wide box gives the bars a comfortable tap target; the
+		   negative margin pulls them back into optical alignment with the nav
+		   edge. Height comes from the bar row above. */
+		.nav_toggle {
+			--_icon-width: 1.5rem;
+			--_bar-gap: 0.5rem;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 2.75rem;
+			margin-right: calc((2.75rem - var(--_icon-width)) / -2);
+			color: inherit;
+			border: 0;
+			border-radius: var(--radius-small);
+			transition: opacity 200ms;
+			@media (hover: hover) {
+				&:hover {
+					opacity: 0.6;
+				}
+			}
+		}
+
+		/* The span is only the box the two bars sit in, so it is as tall as the
+		   gap between them plus the bar that closes it. */
+		.nav_toggle_icon {
+			position: relative;
+			display: block;
+			width: var(--_icon-width);
+			height: calc(var(--_bar-gap) + var(--border-width));
+			&::before,
+			&::after {
+				content: "";
+				position: absolute;
+				inset-inline: 0;
+				height: var(--border-width);
+				background-color: currentcolor;
+				transition: transform 200ms;
+			}
+			&::before {
+				top: 0;
+			}
+			&::after {
+				top: var(--_bar-gap);
+			}
+		}
+
+		/* Open: each bar moves to the middle of the box and crosses the other. */
+		.nav_wrap[data-open] .nav_toggle_icon {
+			&::before {
+				transform: translateY(calc(var(--_bar-gap) / 2)) rotate(45deg);
+			}
+			&::after {
+				transform: translateY(calc(var(--_bar-gap) / -2)) rotate(-45deg);
+			}
+		}
+
+		/* A 0fr → 1fr row is what slides: the panel takes the height its content
+		   asks for and animates back down to nothing. `visibility` keeps the
+		   links out of the tab order while closed, and stays `visible` for the
+		   length of the transition so the panel is still on screen as it goes. */
+		.nav_menu {
+			order: 3;
+			flex-basis: 100%;
+			display: grid;
+			grid-template-rows: 0fr;
+			visibility: hidden;
+			transition:
+				grid-template-rows 250ms ease,
+				visibility 250ms;
+		}
+
+		.nav_menu_inner {
+			overflow: hidden;
+			opacity: 0;
+			transition: opacity 250ms ease;
+		}
+
+		.nav_wrap[data-open] .nav_menu {
+			grid-template-rows: 1fr;
+			visibility: visible;
+		}
+
+		.nav_wrap[data-open] .nav_menu_inner {
+			opacity: 1;
+		}
+
+		/* Padding sits here, inside the box that collapses, so a closed menu
+		   measures zero and the bar stays exactly `--nav-height`. */
+		.nav_links {
+			display: flex;
+			flex-direction: column;
+			margin: 0;
+			padding: var(--space-2) 0 var(--space-4);
+			list-style: none;
+			font-size: var(--text-small);
+			font-weight: var(--primary-medium);
+			& > li + li {
+				border-top: var(--border-width) solid var(--border);
+			}
+		}
+
+		.nav_link {
+			display: flex;
+			align-items: center;
+			min-height: 2.75rem;
+			color: var(--text-faded);
+			text-decoration: none;
+			text-underline-offset: 0.4em;
+			text-decoration-thickness: var(--border-width);
+			transition: color 200ms;
+			&[aria-current="page"] {
+				color: var(--text);
+			}
+			@media (hover: hover) {
+				&:hover {
+					color: var(--text);
+				}
+			}
+		}
+
+		/* Wide enough for the links to sit in the bar itself. */
+		@media (width >= 48rem) {
+			.nav_toggle {
+				display: none;
+			}
+
+			.nav_menu {
+				order: initial;
+				flex-basis: auto;
+				display: block;
+				visibility: visible;
+			}
+
+			.nav_menu_inner {
+				overflow: visible;
+				opacity: 1;
+			}
+
+			.nav_links {
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: center;
+				padding: 0;
+				gap: var(--space-4);
+				font-size: var(--text-small);
+				& > li + li {
+					border-top: 0;
+				}
+			}
+
+			.nav_link {
+				/* min-height: 2.75rem carries over from the mobile-menu rule above.
+				   It is kept at every breakpoint (not just touch-sized ones) since a
+				   768px+ viewport can still be a touch device. */
+				&[aria-current="page"] {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+</style>

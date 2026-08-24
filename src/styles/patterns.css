@@ -1,0 +1,186 @@
+/* Structural classes the component library depends on (`.section`,
+   `.container`, `.button-wrapper`, card/image/video children). Required for
+   Section/Card/ButtonWrapper/Img/Video to render correctly — unlike
+   utilities.css (a large standalone helper-class library for optional
+   page-authoring convenience), this isn't optional once those components are
+   in use. See design.md for why utilities.css itself isn't ported. */
+
+.heading:has(+ .text) {
+	margin-bottom: var(--_margin-bottom);
+}
+
+.heading,
+.text {
+	margin-top: var(--_margin-top);
+	max-width: var(--_mw, none);
+}
+
+.heading + .text {
+	margin-top: 0;
+}
+
+.section {
+	padding-top: var(--section-space-medium);
+	padding-bottom: var(--section-space-medium);
+	background-color: var(--background);
+	color: var(--text);
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: center;
+	position: relative;
+	column-gap: var(--space-2);
+	row-gap: var(--space-2);
+}
+
+.container {
+	width: var(--site-width);
+	max-width: var(--max-width-main);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: var(--_alignment, start);
+	gap: var(--space-8);
+	position: relative;
+	margin-inline: auto;
+	& > [class] {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+}
+
+.button-wrapper {
+	margin-top: var(--space-6);
+	display: flex;
+	flex-flow: wrap;
+	align-items: center;
+	justify-content: var(--_alignment, start);
+	grid-column-gap: var(--space-2);
+	grid-row-gap: var(--space-2);
+}
+
+/* Buttons closing a card sit on its floor, however tall the row around it grows.
+   Here rather than in the component so the margin it replaces, set just above,
+   loses to it on specificity rather than on layer order. */
+.card_content > .button-wrapper:last-child {
+	margin-top: auto;
+	padding-top: var(--space-6);
+}
+
+.image {
+	background-color: var(--background-skeleton);
+
+	&.transparent {
+		background-color: transparent;
+		object-fit: contain;
+	}
+}
+
+.video {
+	background-color: var(--background-skeleton);
+	height: auto;
+
+	&.transparent {
+		background-color: transparent;
+		object-fit: contain;
+	}
+}
+
+/* Card visual children — media fills its box, be that the whole card or the
+   band across its top. Here rather than in the component so it outranks the
+   `height: auto` every image and video starts from. */
+.card_visual > :is(.image, .video) {
+	width: 100%;
+	height: 100%;
+}
+
+/* Section background children — anything slotted beside the container */
+.section > :where(:not(.container)) {
+	pointer-events: none;
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/* Alignment — Section's `align` prop and ButtonWrapper both generate these
+   class names directly, so they're required wiring (from utilities.css),
+   not part of the standalone helper-class library left out above. */
+.alignment-start {
+	--_alignment: start;
+	text-align: start;
+}
+
+.alignment-center {
+	--_alignment: center;
+	text-align: center;
+}
+
+.alignment-end {
+	--_alignment: end;
+	text-align: end;
+}
+
+/* Section padding overrides — every `paddingTop`/`paddingBottom` value
+   other than the "medium" default (which needs no override class) maps to
+   one of these exact class names. Same required-wiring rationale as the
+   alignment classes above; `padding-top-8` etc. from the full utilities.css
+   scale are not included since Section never generates those. */
+.padding-top-0 {
+	padding-top: 0;
+}
+.padding-bottom-0 {
+	padding-bottom: 0;
+}
+.padding-top-sitemargin {
+	padding-top: var(--site-margin);
+}
+.padding-bottom-sitemargin {
+	padding-bottom: var(--site-margin);
+}
+.padding-top-small {
+	padding-top: var(--section-space-small);
+}
+.padding-bottom-small {
+	padding-bottom: var(--section-space-small);
+}
+.padding-top-large {
+	padding-top: var(--section-space-large);
+}
+.padding-bottom-large {
+	padding-bottom: var(--section-space-large);
+}
+.padding-top-navoverlap {
+	padding-top: var(--section-space-nav-overlap);
+}
+.padding-bottom-navoverlap {
+	padding-bottom: var(--section-space-nav-overlap);
+}
+
+/* Section's `fullHeight` prop generates this class directly. */
+.min-height-screen {
+	min-height: 100svh;
+}
+
+/* Accessibility */
+.sr-only {
+	white-space: nowrap;
+	clip: rect(0, 0, 0, 0);
+	border-width: 0;
+	width: 1px;
+	height: 1px;
+	margin-inline: auto;
+	padding: 0;
+	position: absolute;
+	inset: 0% 0% auto;
+	overflow: hidden;
+}
+
+:is(.margin-trim, .heading, .text, .layout > *) {
+	& > :first-child {
+		margin-top: 0;
+	}
+	& > :last-child {
+		margin-bottom: 0;
+	}
+}

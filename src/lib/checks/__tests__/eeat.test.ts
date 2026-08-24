@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { checkEeat } from "../eeat";
 
-describe("checkEeat — publish date detection", () => {
+describe("checkEeat: publish date detection", () => {
   it("detects a visible <time> tag", () => {
     const html = `<time datetime="2026-01-01">Jan 1</time>`;
     expect(checkEeat(html, "https://example.com").hasPublishDate).toBe(true);
@@ -9,7 +9,7 @@ describe("checkEeat — publish date detection", () => {
 
   it("detects a JSON-LD dateModified field even with no <time> tag anywhere", () => {
     // Regression: dahiana.work's real JSON-LD has a ProfilePage with
-    // dateModified but no <time> tag on the page — a <time>-only check
+    // dateModified but no <time> tag on the page; a <time>-only check
     // reports this as "no date signal" when Google's own recommended
     // mechanism (JSON-LD datePublished/dateModified) is right there.
     const html = `

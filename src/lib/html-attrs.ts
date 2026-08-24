@@ -1,5 +1,5 @@
 /**
- * Attribute order inside an HTML tag is not meaningful — `<meta content="x"
+ * Attribute order inside an HTML tag is not meaningful: `<meta content="x"
  * name="y">` and `<meta name="y" content="x">` are equally valid, and real
  * sites use both (webflow.com's homepage does the former). Parse each
  * attribute independently rather than assuming a fixed order between two
@@ -28,11 +28,11 @@ const NAMED_ENTITIES: Record<string, string> = {
 
 /**
  * Text pulled straight from raw HTML (title text, meta attribute values,
- * etc.) still contains literal entities like `&#39;` or `&amp;` — decoding
+ * etc.) still contains literal entities like `&#39;` or `&amp;`; decoding
  * matters anywhere text length or exact content is compared against what a
  * reader would actually see. Centralized here after the same fix was
  * applied to `<meta>` content but initially missed on `<title>` text
- * (confirmed live: airbnb.com's title contains a raw `&amp;`) — one shared
+ * (confirmed live: airbnb.com's title contains a raw `&amp;`), one shared
  * function so a future new extraction site doesn't reintroduce the gap.
  */
 export function decodeEntities(text: string): string {
