@@ -1,20 +1,4 @@
-function startClock(el: HTMLElement): void {
-  const format = () =>
-    new Date().toLocaleTimeString(undefined, {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  el.textContent = format();
-  setInterval(() => {
-    el.textContent = format();
-  }, 1000);
-}
-
 function init(): void {
-  const clock = document.getElementById("corner-clock");
-  if (clock) startClock(clock);
-
   const form = document.getElementById("checkin-form") as HTMLFormElement | null;
   const urlInput = document.getElementById("url-input") as HTMLInputElement | null;
   const submitButton = document.getElementById("checkin-submit") as HTMLButtonElement | null;
