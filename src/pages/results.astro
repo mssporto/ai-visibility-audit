@@ -377,8 +377,16 @@ import Button from "@/components/Button.astro";
 		}
 
 		@media (max-width: 480px) {
+			/* Most rows ("Crawler Access — 100/100") fit one line at this width
+			   and should stay that way. Only the longer failing rows ("35/100 ·
+			   Needs attention") need to wrap; when they do, right-align the
+			   value + chevron on their own line instead of stranding the value
+			   flush left. */
 			:global(.category-summary) {
 				flex-wrap: wrap;
+			}
+			:global(.category-summary__value) {
+				margin-left: auto;
 			}
 		}
 

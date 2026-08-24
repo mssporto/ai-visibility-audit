@@ -1,10 +1,19 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import { SITE_URL } from './src/consts.ts';
+import { isNoindexRoute } from './src/utils/seo.ts';
 
 // https://astro.build/config
 export default defineConfig({
 	site: SITE_URL,
+	integrations: [
+		sitemap({
+			// Keep the sitemap in sync with NOINDEX_ROUTES/isNoindexRoute, the
+			// same list BaseHead uses for the meta-tag form of noindex.
+			filter: (page) => !isNoindexRoute(new URL(page).pathname),
+		}),
+	],
 	security: {
 		// Astro emits a <meta http-equiv="content-security-policy"> with hashes
 		// for every script/style it bundles. GTM injects gtm.js itself, so it

@@ -123,9 +123,12 @@ inputs/buttons/cards), `--radius-round` (`100vw`, the progress-bar track/fill),
 
 Real Lumos components, wired in as-is (not reimplemented):
 
-1. **`BaseHead`**: page `<head>` (title/description/canonical/OG/Twitter meta, favicon). Falls
-   back to `/favicon.svg` for the social-share image since no dedicated OG image asset exists yet;
-   replace `image` default once one ships.
+1. **`BaseHead`**: page `<head>` (title/description/canonical/OG/Twitter meta, favicon). Defaults
+   `image` to `/og-image.png` (1200×630, generated from the approved isologo lockup via
+   `scripts/generate-og-image.mjs` — re-run it if the lockup changes; not part of the build
+   pipeline, since it depends on brand assets, not user-submitted data). Also emits an
+   `Organization`/`WebSite` JSON-LD block: the tool audits other sites for this exact signal, so
+   it ships its own rather than failing its own structured-data checklist.
 2. **`SkipLink`**: Lumos's pattern exactly: renders a real `<Button element="link">`, fixed
    off-screen via `translate` until `:focus`, jumps to `#main`.
 3. **`Nav`**: Lumos's full sticky-bar + mobile-toggle pattern, restyled. `nav_logo` renders the
@@ -175,10 +178,9 @@ speculatively.
 
 ## Layout patterns
 
-- **Landing page**: centered hero heading, wide input group below it. A digital clock and a
-  static "Ready"/"Examining" status indicator are tucked into the top corners, decorative utility
-  chrome, `aria-hidden`, with the real accessible status living in a separate `role="status"`
-  element so a screen-reader user gets one clear announcement, not two competing ones.
+- **Landing page**: centered hero heading, wide input group below it. An earlier corner clock/
+  status-indicator widget (decorative chrome, `aria-hidden`) was removed as clutter (see "Open
+  items" history); the real accessible status lives in `#checkin-status` (`role="status"`).
 - **Dashboard**: AEO/GEO score cards at the top, a one-line verdict beneath them, then the full
   "Lab results" panel as a high-contrast vertical list.
 
@@ -202,8 +204,6 @@ WCAG 2.1/2.2 AA minimum.
   4.5:1 at these values; verify against final rendered output before shipping regardless.
 - **Never color-only**: every data-row status is icon (✓/!) **and** text ("Needs attention"),
   never the green/red tint alone.
-- **Corner widgets** (clock, status) are `aria-hidden`: decorative chrome, not the accessible
-  status channel. The real status lives in `#checkin-status` (`role="status"`).
 - **Motion**: the only content-adjacent motion (scroll-to-dashboard) has a `prefers-reduced-motion`
   fallback to an instant jump.
 - **The data rows are real text**, never canvas/image renderings: a screen reader must read
@@ -227,8 +227,10 @@ scoped style will apply to anything rendered by `results-ui.ts`.
   canvas-composited contrast checks (not estimated from hex values); `--text-faded` originally
   measured 3.59–3.77:1 at 55%-in-`lab` and failed AA; now 5.68–6.14:1 at the current 70%-in-`srgb`
   value. Re-verify again if either swatch or `--text-faded`'s percentage changes.
-- Whether the corner clock/status widgets earn their place long-term, or should be removed if
-  they read as clutter rather than useful chrome once seen in a real browser.
+- ~~Whether the corner clock/status widgets earn their place long-term.~~ Removed 2026-08-24:
+  the markup was already gone from `index.astro`, leaving orphaned `.corner-widget` CSS and a
+  dead `getElementById("corner-clock")` call in `home-ui.ts` that always no-opped. Both deleted;
+  this file updated to match what's actually on the page.
 - `Card`/`Grid`/`ContentWrapper`/`Img`/`Video`/`Overlay`/`Eyebrow`/`RichText`/`FormattedDate` are
   installed but unused; revisit whether they're worth keeping installed if that stays true for a
   long time, versus adding them only when a real page actually needs one.

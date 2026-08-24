@@ -7,7 +7,7 @@ import Button from "@/components/Button.astro";
 import ContentWrapper from '@/components/ContentWrapper.astro';
 ---
 
-<BaseLayout description="A free AEO/GEO visibility audit. Paste a URL, get your score." title="AI Visibility Audit Tool">
+<BaseLayout description="A free AEO/GEO visibility audit. Paste a URL, get your score." title="Free AEO & GEO Visibility Audit">
   <Section align="center" paddingTop="even" class="landing" fullHeight={true} paddingBottom="even">
     <ContentWrapper centered={true}>
 
@@ -47,18 +47,6 @@ import ContentWrapper from '@/components/ContentWrapper.astro';
 		:global(.landing .container) {
 			max-width: var(--content-max-width);
 			text-align: center;
-		}
-
-		.corner-widget {
-			position: absolute;
-			top: var(--space-3);
-			right: var(--space-3);
-			font-family: var(--primary-family);
-			font-size: var(--text-micro);
-			font-weight: var(--primary-bold);
-			letter-spacing: 0.06em;
-			color: var(--text-faded);
-			font-variant-numeric: tabular-nums;
 		}
 
 		:global(.landing__heading) {
@@ -120,9 +108,6 @@ import ContentWrapper from '@/components/ContentWrapper.astro';
 		@media (max-width: 480px) {
 			.input-group__row {
 				flex-direction: column;
-			}
-			.corner-widget {
-				display: none;
 			}
 		}
   </style>

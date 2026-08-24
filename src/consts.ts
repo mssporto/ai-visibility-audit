@@ -16,4 +16,9 @@ export const GTM_ID = "GTM-KFBP33SQ";
  * Surrounding slashes are optional: `"/thanks"`, `"thanks"` and `"/thanks/"`
  * all match the same route.
  */
-export const NOINDEX_ROUTES: string[] = [];
+export const NOINDEX_ROUTES: string[] = [
+	// Renders per-audit content driven by a ?url= query param: not a
+	// canonical page worth indexing (thin/duplicate content risk), and its
+	// static HTML is just the loading state until client JS runs anyway.
+	"/results",
+];
